@@ -1,0 +1,185 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:2:1-100:12
+	xmlns:android
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:2:11-69
+	package
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:3:5-34
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:5:5-31
+	android:versionCode
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:4:5-29
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+uses-sdk
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:7:5-8:41
+	android:targetSdkVersion
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:8:10-39
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:7:15-40
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:9:3-77
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:9:20-74
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:10:5-78
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:10:22-76
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:11:5-80
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:11:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:12:22-77
+uses-permission#android.permission.INTERNET
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:13:5-66
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:13:22-64
+uses-permission#android.permission.CALL_PHONE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:14:5-69
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:14:22-66
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:15:5-75
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:15:22-72
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:16:5-79
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:16:22-77
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:17:5-78
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:17:22-75
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:18:5-83
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:18:22-81
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:19:5-81
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:19:22-78
+uses-permission#android.permission.WAKE_LOCK
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:20:3-65
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:20:20-63
+uses-permission#com.android.alarm.permission.SET_ALARM
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:21:3-75
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:21:20-73
+uses-permission#android.permission.BATTERY_STATS
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:22:3-69
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:22:20-67
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:23:3-73
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:23:20-71
+application
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:24:5-98:19
+	android:label
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:27:9-41
+	android:allowBackup
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:25:9-35
+	android:icon
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:26:9-38
+activity#com.stl.musicplayer.SplashScreen
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:30:9-40:20
+	android:screenOrientation
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:33:13-49
+	android:label
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:32:13-45
+	android:theme
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:34:13-66
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:31:13-60
+	android:launchMode
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:35:13-44
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:36:13-39:29
+action#android.intent.action.MAIN
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:37:17-69
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:37:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:38:17-77
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:38:27-74
+activity#com.stl.musicplayer.AndroidBuildingMusicPlayerActivity
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:57:9-63:20
+	android:screenOrientation
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:60:13-49
+	android:label
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:59:13-45
+	android:configChanges
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:61:13-63
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:58:13-82
+	android:launchMode
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:62:13-44
+activity#com.stl.musicplayer.PlayListActivity
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:65:9-73
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:65:19-70
+activity#com.stl.musicplayer.SettingOptions
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:66:9-71
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:66:19-68
+activity#com.stl.musicplayer.ChangeUrlActivity
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:67:9-74
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:67:19-71
+service#com.stl.musicplayer.MyWebService
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:68:9-99
+	android:enabled
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:68:18-40
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:68:41-88
+receiver#com.stl.musicplayer.BootUpReceiver
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:71:9-81:17
+	android:enabled
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:72:13-35
+	android:permission
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:74:13-75
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:73:13-62
+intent-filter#android.intent.action.BOOT_COMPLETED+android.intent.category.DEFAULT
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:76:13-80:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:77:21-83
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:77:29-80
+category#android.intent.category.DEFAULT
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:78:21-80
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:78:31-77
+service#com.stl.musicplayer.ServiceBootComplete
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:82:3-86:16
+	android:exported
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:85:14-37
+	android:enabled
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:84:14-36
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:83:14-68
+receiver#com.stl.musicplayer.PowerConnectionReceiver2
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:90:3-95:20
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:90:13-72
+intent-filter#android.intent.action.ACTION_POWER_CONNECTED+android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:91:13-94:29
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:92:17-87
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:92:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:93:17-90
+	android:name
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:93:25-87

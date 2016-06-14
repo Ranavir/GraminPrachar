@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_screen" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:text="http://graminprachar.com"
+        android:textColor="#454545"
+        android:textSize="12dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/textView1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="21dp"
+        android:progress="0" />
+
+    <TextView
+        android:id="@+id/applicationVersion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progress_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="129dp"
+        android:gravity="center_horizontal"
+        android:text="Version :"
+        android:textColor="#454545" />
+
+</RelativeLayout><!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/layout/activity_splash.xml -->

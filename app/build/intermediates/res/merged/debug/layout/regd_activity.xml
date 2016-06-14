@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:background="@drawable/hd_black_backgrounds">
+
+<RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:layout_gravity="center"
+    android:layout_centerInParent="true"  >
+    <LinearLayout
+        android:id="@+id/regdlinearLayout"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="62dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true">
+
+        <EditText
+            android:id="@+id/regdFirstNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPersonName"
+            android:background="@drawable/shape"
+            android:drawableLeft="@drawable/user"
+            android:hint="First Name" >
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/regdLastNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPersonName"
+            android:background="@drawable/shape"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/user"
+            android:hint="Last Name"  >
+        </EditText>
+        <EditText
+            android:id="@+id/regdPhoneEt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/shape"
+            android:inputType="phone"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/phone"
+            android:hint="Mobile"  >
+        </EditText>
+        <EditText
+            android:id="@+id/regdEmailEt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/shape"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/email"
+            android:hint="Email"  >
+        </EditText>
+        
+        
+        <Button
+            android:id="@+id/regdBtn"
+            android:layout_marginTop="30dp"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_border"
+            android:text="Register"/> 
+        
+    </LinearLayout>
+
+</RelativeLayout>
+</ScrollView><!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/layout/regd_activity.xml -->

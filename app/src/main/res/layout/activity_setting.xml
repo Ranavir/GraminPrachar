@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/sendBulkDataBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:text="SEND BULK DATA" />
+	<Button
+        android:id="@+id/downloadPlaylistBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="DOWNLOAD PLAYLIST" />
+    <Button
+        android:id="@+id/downloadMediaBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingTop="1dp"
+        android:text="DOWNLOAD NEW MEDIA FILE" />
+    
+     <Button
+        android:id="@+id/changeUrlBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingTop="1dp"
+        android:text="CHANGE SERVER URL" />
+</LinearLayout>

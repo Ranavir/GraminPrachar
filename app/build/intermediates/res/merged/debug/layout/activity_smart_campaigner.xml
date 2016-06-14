@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/main_bg2" >
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_margin="20dp"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/play_song_icon"
+        android:background="@drawable/btn_border"
+        android:layout_height="wrap_content"
+        android:textColor="#FF8800"
+        android:text="Play Song" />
+
+</LinearLayout><!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/layout/activity_smart_campaigner.xml -->

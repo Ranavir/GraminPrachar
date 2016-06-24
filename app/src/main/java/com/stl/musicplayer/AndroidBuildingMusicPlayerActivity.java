@@ -2,6 +2,8 @@ package com.stl.musicplayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,10 +31,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
@@ -62,6 +66,7 @@ import android.widget.Toast;
 @SuppressLint({ "NewApi", "Wakelock" })
 
 public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCompletionListener{//, SeekBar.OnSeekBarChangeListener
+	private static final String TAG = "AndroidBuildingMusicPlayerActivity : ";
 	final static private long ONE_SECOND = 1000;
 	
 	public static AndroidBuildingMusicPlayerActivity androidBuildingMusicPlayerActivityInstance;
@@ -80,7 +85,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private TextView songCurrentDurationLabel;
 	private TextView songTotalDurationLabel;
 	// Media Player
-	private  MediaPlayer mp;
+	private  MediaPlayer mp,voicemp;
+	private AssetFileDescriptor afd = null;
 	// Handler to update UI timer, progress bar etc,.
 	private Handler mHandler = new Handler();;
 	//private SongsManager songManager;
@@ -214,7 +220,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		
 		for(int volume=currVolume+1;volume<=maxVolume;volume++){
 			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_VIBRATE);
-			//System.out.println("hhhhhhhhhhhhh volume: " + volume + "         curVolume: " + audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+			System.out.println(TAG + " volume: " + volume + "         curVolume: " + audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 		}
 		//audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_VIBRATE);
 		
@@ -241,8 +247,17 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			file.mkdir();
 		}
 		
-		
-				
+		/*Added by Ranvir Dt. 22-06-2016*/
+		/*************************************/
+		turnGPSOn();
+		swtichDataConnection(true, AndroidBuildingMusicPlayerActivity.this);
+		if(audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+			Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "Already in Silent Mode", Toast.LENGTH_LONG).show();
+		}else{
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "Changed to Silent Mode", Toast.LENGTH_LONG).show();
+		}
+		/*************************************/
 		checkForUpdates();
 		
 		
@@ -265,16 +280,19 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		 * Button Click event for Play list click event
 		 * Launches list activity which displays list of songs
 		 * */
-		btnPlaylist.setOnClickListener(new View.OnClickListener() {			
+		btnPlaylist.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				Intent i = new Intent(getApplicationContext(), PlayListActivity.class);
-				startActivityForResult(i, 100);			
+				startActivityForResult(i, 100);
 			}
 		});
-				
+
+
 	}//end of onCreate
-		
+
+
+
 	Handler playlistHandler = new Handler();
 	Runnable playlistRunnable = new Runnable() {		 
         @Override
@@ -283,19 +301,20 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
         }
     };    
     public void getLatestPlaylistAndUpdate(){
-    	String tag = "GET-LATEST-PLAYLIST";
-    	Log.i(tag, songsList.toString());
-    	
-    	DatabaseUtil util = new DatabaseUtil(getApplicationContext());
+    	String tag = "getLatestPlaylistAndUpdate---->";
+		System.out.println(TAG+tag+songsList.toString());
+		DatabaseUtil util = new DatabaseUtil(getApplicationContext());
 		ArrayList<HashMap<String, String>> latestSongList = util.checkSong();
 		util.close();		
     	
     	if(songsList.size()==0 && latestSongList.size()==0){    		
     		Log.i(tag, "songList=0 and latestSongList=0");
+			System.out.println(TAG + tag + "songList=0 and latestSongList=0");
     		//Toast.makeText(getApplicationContext(), "99999999: "+ currentSongIndex, Toast.LENGTH_SHORT).show();
         	
     	}else if(songsList.size()==0 && latestSongList.size()>0){    		
     		Log.i(tag, "songList=0 and latestSongList>0");
+			System.out.println(TAG + tag + "songList=0 and latestSongList>0");
     		songsList = latestSongList;
     		
     		currentSongIndex = getLatestPlaySongIndex();
@@ -304,11 +323,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
     		//Toast.makeText(getApplicationContext(), "88888888: "+ currentSongIndex, Toast.LENGTH_SHORT).show();
     		
     	}else if(songsList.size()>0 && latestSongList.size()==0){
-    		Log.i(tag, "songList>0 and latestSongList=0");    		
+    		Log.i(tag, "songList>0 and latestSongList=0");
+			System.out.println(TAG + tag + "songList>0 and latestSongList=0");
     		//Toast.makeText(getApplicationContext(), "77777777: "+ currentSongIndex, Toast.LENGTH_SHORT).show();
     		
     	}else if(songsList.size()>0 && latestSongList.size()>0){
     		Log.i(tag, "songList>0 and latestSongList>0");
+			System.out.println(TAG + tag + "songList>0 and latestSongList>0");
     		songsList = latestSongList;
     		//String songPath = songsList.get(i).get("songPath");  
      		
@@ -355,20 +376,20 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 * */
 	public void onResume(){
 		super.onResume();
-		System.out.println("resumed...........");
+		System.out.println(TAG+"resumed...........");
 	}
 	public void onPause(){
 		super.onPause();
-		System.out.println("paused--------------");
+		System.out.println(TAG+"paused--------------");
 	}
 	public void onStop(){
 		super.onStop();
-		System.out.println("stop...........");
+		System.out.println(TAG+"stop...........");
 	}
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		System.out.println("destroy...........");
+		System.out.println(TAG+"destroy...........");
 		unregisterReceiver(receiver);
 		unregisterReceiver(swUpdateReceiver);
 		
@@ -394,6 +415,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 		mp.stop();
 		mp.release();
+
+		voicemp.release();
 		//h2.removeCallbacks(timerCheck);
 		//uploadHandler.removeCallbacks(uploadrun);
 		
@@ -415,6 +438,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		//unregister alarm manger and broadcast receiver
 		alarmManager.cancel(pendingIntent);
 	    unregisterReceiver(broadCastReceiver);
+
+		/*************************************************/
+		//Added Dt. 22062016 by Ranvir
+		audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+		turnGPSOff();
+		swtichDataConnection(false, getApplicationContext());
+		/*************************************************/
 	    return;	    
 	}
 	
@@ -438,7 +468,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 * @param songIndex - index of song
 	 * */
 	public void  playSong(int songIndex){
-				
+		System.out.println(TAG+" ENTRY---->playSong songIndex:"+songIndex);
 		//System.out.println("current song index on playsong: "+songIndex);
 		//Toast.makeText(getApplicationContext(), "current song index on playsong : "+songIndex, Toast.LENGTH_LONG).show();
 		// Play song
@@ -494,7 +524,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 								updateProgressBar();
 							}else{
 								songTitleLabel.setText("Song not present in device");
-								System.out.println("Song not present in device......................:" + currentSongIndex);
+								System.out.println(TAG+"Song not present in device......................:" + currentSongIndex);
 
 								songNotPresent++;					
 								
@@ -503,15 +533,15 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 								
 								
 								if(currentSongIndex < (songsList.size() - 1)){
-									System.out.println("nnnnnnnnnnnnnn   1");	
+									System.out.println(TAG+"nnnnnnnnnnnnnn   1");
 									currentSongIndex = currentSongIndex + 1;									
 								}else{
-									System.out.println("nnnnnnnnnnnnnn   2");
+									System.out.println(TAG+"nnnnnnnnnnnnnn   2");
 									currentSongIndex = 0; 
 								}	
 								
 								if(songNotPresent == songsList.size()){
-									songTitleLabel.setText("All assigned songs not found in device");
+									songTitleLabel.setText(TAG+"All assigned songs not found in device");
 								
 									//2014-10-27
 									//if all assigned songs not present in device then stop the player, 
@@ -528,16 +558,16 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 							}
 								
 						}else{    
-							songTitleLabel.setText("Volume Should be more than 8");
+							songTitleLabel.setText(TAG+"Volume Should be more than 8");
 							//showAlertDialog("Volume Should be more than 8");
 						}
 					}else{
-						songTitleLabel.setText("Connect charger");
+						songTitleLabel.setText(TAG+"Connect charger");
 						showAlertDialog("Connect charger");
 					}
 					
 				}else{
-					songTitleLabel.setText("Insert Speaker Pin");
+					songTitleLabel.setText(TAG+"Insert Speaker Pin");
 					showAlertDialog("Insert Speaker Pin In mobile jack");
 				}			
 				
@@ -553,21 +583,22 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			//System.out.println("songsList size :: "+songsList.size());
 			e.printStackTrace();
 			if(currentSongIndex < (songsList.size() - 1)){
-				System.out.println("nnnnnnnnnnnnnn   3");	
+				System.out.println(TAG+"nnnnnnnnnnnnnn   3");
 				currentSongIndex = currentSongIndex + 1;			
 			}else{
-				System.out.println("nnnnnnnnnnnnnn   4");
+				System.out.println(TAG+"nnnnnnnnnnnnnn   4");
 				currentSongIndex = 0;
 			}
 			playSong(currentSongIndex);
 		}
-	}
+		System.out.println(TAG+" EXIT---->playSong");
+	}//end of playsong
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		if(isStarted==true){
 			//mp.reset();
 			isStarted=false;
-			System.out.println("Song Playing Complete::::");
+			System.out.println(TAG+"Song Playing Complete::::");
 			Toast.makeText(getApplicationContext(), "Song Playing Complete", Toast.LENGTH_LONG).show();
 			//log end time..
 			double latitude = 0;
@@ -587,27 +618,27 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			
 			// check for repeat is ON or OFF
 			if(isRepeat){
-				System.out.println("aaa  isRepeate");
+				System.out.println(TAG+"aaa  isRepeate");
 				// repeat is on play same song again
 				//playSong(currentSongIndex);
 			} else if(isShuffle){
-				System.out.println("aaa  isSuffle");
+				System.out.println(TAG+"aaa  isSuffle");
 				// shuffle is on - play a random song
 				//Random rand = new Random();
 				//currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
 				//playSong(currentSongIndex);
 			} else {
 				
-				System.out.println("aaa  not isRepeate and isSuffle");
+				System.out.println(TAG+"aaa  not isRepeate and isSuffle");
 				
 				//Toast.makeText(getApplicationContext(), "currentSongIndex on comp : "+currentSongIndex, Toast.LENGTH_SHORT).show();
-				System.out.println("currentSongIndex on comp : " + currentSongIndex);
+				System.out.println(TAG+"currentSongIndex on comp : " + currentSongIndex);
 				// no repeat or shuffle ON - play next song
 				if(currentSongIndex < (songsList.size() - 1)){
-					System.out.println("nnnnnnnnnnnnnn   5");					
+					System.out.println(TAG+"nnnnnnnnnnnnnn   5");
 					currentSongIndex = currentSongIndex + 1;					
 				}else{
-					System.out.println("nnnnnnnnnnnnnn   6");
+					System.out.println(TAG+"nnnnnnnnnnnnnn   6");
 					currentSongIndex = 0;					
 				}
 				
@@ -695,7 +726,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	     int keyCode = event.getKeyCode();
 	     AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
 	     
-	     System.out.println("max volume: " + am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)+"   curr volume: " + am.getStreamVolume(AudioManager.STREAM_MUSIC));
+	     System.out.println(TAG+"max volume: " + am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)+"   curr volume: " + am.getStreamVolume(AudioManager.STREAM_MUSIC));
 	    
 	     switch (keyCode) {
 	         case KeyEvent.KEYCODE_VOLUME_UP:
@@ -724,7 +755,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 }
 		
 	public void logCurrentVolume(int volume_level){
-		System.out.println("currentVolume  "+volume_level);
+		System.out.println(TAG+"currentVolume  "+volume_level);
 		if(songsList.size()>0){			
 			if(volume_level<8){				
 				if(songsList.size()>0){
@@ -833,15 +864,15 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				//id,play_date,song_index
 				String pDate = obj.getString("play_date");
 				if(pDate.equals(curDate)){
-					System.out.println("pppppppppppppppppppppppppppppppppppppp-1");
+					System.out.println(TAG+"pppppppppppppppppppppppppppppppppppppp-1");
 					currentSongIndex = obj.getInt("song_index");
 				}else{
-					System.out.println("pppppppppppppppppppppppppppppppppppppp-2");
+					System.out.println(TAG+"pppppppppppppppppppppppppppppppppppppp-2");
 					currentSongIndex = 0;								
 					dbUtil.updatePlaySongIndex(curDate, currentSongIndex);							
 				}
 			}else{
-				System.out.println("pppppppppppppppppppppppppppppppppppppp-3");
+				System.out.println(TAG+"pppppppppppppppppppppppppppppppppppppp-3");
 				currentSongIndex = 0;
 			}
 			
@@ -853,7 +884,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				dbUtil.close();
 		}
 		
-		System.out.println("cuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuurrrrrrrrrrrrrrrr song index: " + currentSongIndex);
+		System.out.println(TAG+"cuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuurrrrrrrrrrrrrrrr song index: " + currentSongIndex);
 		return currentSongIndex;
     }
     
@@ -877,9 +908,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 					ArrayList<HashMap<String, String>> tempSongsList = util.checkSong(); 
 					util.close();
 					if(tempSongsList.size()>0){
-						System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");						
+						System.out.println(TAG+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
 						currentSongIndex = getLatestPlaySongIndex();
-						System.out.println("2222222222222222222222222222 currentSongIndex: manoj:" + currentSongIndex);
+						System.out.println(TAG+"2222222222222222222222222222 currentSongIndex: manoj:" + currentSongIndex);
 						//playSong(0);		
 					}else{
 						if(Utils.checkiInternet(getApplicationContext())){
@@ -888,7 +919,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 							String UID = mngr.getDeviceId();
 							msg = Utils.getInputDataFromServer(UID, getApplicationContext());
 						}else{
-							System.out.println("1. Internet Connection Not Present");
+							System.out.println(TAG+"1. Internet Connection Not Present");
 						}
 					}
 				} catch (Exception e) {
@@ -915,12 +946,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				//added by manoj on date 2014-10-16
 				//because when player start check for today's last play song index and play if not completed.
 				currentSongIndex = getLatestPlaySongIndex();
-				System.out.println("2222222222222222222222222222 currentSongIndex: " + currentSongIndex);
+				System.out.println(TAG+"2222222222222222222222222222 currentSongIndex: " + currentSongIndex);
 								
 				// By default play first song 
 				//but required, last song index which is not complete, play again
 				if(tempSongsList.size()>0){
-					System.out.println("ddddddddddddddddd   7");
+					System.out.println(TAG+"ddddddddddddddddd   7");
 					//commented my manoj on date 2014-10-16
 					//because when player start check for today's last play song index and play if not completed.
 					//playSong(0);
@@ -933,6 +964,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				}else{
 					//System.out.println("9999999999999999999999999999999999999");
 					showAlertDialog("No Song in the playlist");
+					//give voice message that no song in local db
+					playVoiceMsg("playlist_not_found.3gpp");
 				}
 				
 				//added by manoj on date 2014-10-25
@@ -1032,7 +1065,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		                			
 		                			if(Utils.playlistUpdate){
 		                				//Toast.makeText(getApplicationContext(), "111", Toast.LENGTH_SHORT).show();
-		                				System.out.println("ddddddddddddddddd   8");
+		                				System.out.println(TAG+"ddddddddddddddddd   8");
 
 		        						//commented on date  2014-10-20
 		                				//currentSongIndex = 0;
@@ -1045,14 +1078,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		                				//Toast.makeText(getApplicationContext(), "222", Toast.LENGTH_SHORT).show();
 		                				if(!mp.isPlaying()){
 		                					//Toast.makeText(getApplicationContext(), "333", Toast.LENGTH_SHORT).show();
-		                					System.out.println("ddddddddddddddddd   9.1");
+		                					System.out.println(TAG+"ddddddddddddddddd   9.1");
 											currentSongIndex = getLatestPlaySongIndex();	
 											
 											//commented by manoj on date 2014-10-17 3:15PM
 											playSong(currentSongIndex);
 				        				}else{
 				        					//Toast.makeText(getApplicationContext(), "444", Toast.LENGTH_SHORT).show();
-				        					System.out.println("ddddddddddddddddd   9.2");
+				        					System.out.println(TAG+"ddddddddddddddddd   9.2");
 				        				}											
 		                			}else{
 		                				//Toast.makeText(getApplicationContext(), "555", Toast.LENGTH_SHORT).show();
@@ -1092,8 +1125,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	public class PowerConnectionReceiver extends BroadcastReceiver {
 		@Override
 	    public void onReceive(Context context, Intent intent) {
-			 
-	    	int batteryStatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+			System.out.println("PowerConnectionReceiver: ENTRY---> onReceive");
+			int batteryStatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
 	    	boolean isCharging = batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING || batteryStatus == BatteryManager.BATTERY_STATUS_FULL;
 	    		    	
 	    	//Toast.makeText(context, "isCharging: " + isCharging, Toast.LENGTH_SHORT).show();
@@ -1115,18 +1148,18 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		        				
 		        		}else{
 		        			if(Utils.playlistUpdate){
-		        				System.out.println("ddddddddddddddddd   10"); 
+		        				System.out.println(TAG+"ddddddddddddddddd   10");
 		        				//currentSongIndex=0;
 		        				currentSongIndex = getLatestPlaySongIndex();
 								playSong(currentSongIndex);
 		        			}else if(currentSongIndex == 0 && currPosition==0){
 		        				if(!mp.isPlaying()){
-		        					System.out.println("ddddddddddddddddd   11.0");
+		        					System.out.println(TAG+"ddddddddddddddddd   11.0");
 									//currentSongIndex=0;
 		        					currentSongIndex = getLatestPlaySongIndex();
 									playSong(currentSongIndex);
 		        				}else{
-		        					System.out.println("ddddddddddddddddd   11.1");
+		        					System.out.println(TAG+"ddddddddddddddddd   11.1");
 		        				}			        					
 							}else{
 								mp.start();
@@ -1162,6 +1195,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 					}
 				}
 	        }
+			System.out.println("PowerConnectionReceiver: EXIT---> onReceive");
 	    }
 	}
 
@@ -1183,19 +1217,19 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
     			mHandler.removeCallbacks(mUpdateTimeTask);
     			initProgressBar();
     			
-    			System.out.println("bbbbb    1");
+    			System.out.println(TAG+"bbbbb    1");
     			updatePlaylist();
     		}else{
-    			System.out.println("bbbbb    2");
+    			System.out.println(TAG+"bbbbb    2");
     			String playDt = Utils.playDate.trim() + " 23:59:59";
     			String toDt = Utils.getDate("yyyy-MM-dd HH:mm:ss");
 
-    			System.out.println("checking playDt: " + playDt + "            toDt: " + toDt);
+    			System.out.println(TAG+"checking playDt: " + playDt + "            toDt: " + toDt);
     			
     			if(playDt.compareTo(toDt)>0){
-    				System.out.println("bbbbb    3");
+    				System.out.println(TAG+"bbbbb    3");
     			}else{
-    				System.out.println("bbbbb    4");
+    				System.out.println(TAG+"bbbbb    4");
     				songTitleLabel.setText("No playlist assigned to you");
     				
     				//2014-10-01
@@ -1220,6 +1254,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	}
 		
 	public void updatePlaylist() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
+		System.out.println(TAG+" ENTRY--->updatePlaylist");
 		DatabaseUtil util = new DatabaseUtil(getApplicationContext());
 		songsList = util.checkSong();
 		util.close();
@@ -1247,7 +1282,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			dutil.updatePlayDetEndTime(songSeqId,"end_time",latitude,longitude);
 			dutil.close();
 			
-			System.out.println("ddddddddddddddddd   12");			 
+			System.out.println(TAG+"ddddddddddddddddd   12");
 
 			//commented on date  2014-10-20
 			//currentSongIndex = 0;
@@ -1272,7 +1307,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 					util1.close();
 					
 					if(songsList.size()>0){			
-						System.out.println("bbbbbbbbbbb    8"); 							
+						System.out.println(TAG+"bbbbbbbbbbb    8");
 						Utils.playlistUpdate = true;	
 						//commented on date  2014-10-20
 						//currentSongIndex = 0;
@@ -1282,6 +1317,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				}
 			}
 		}
+		System.out.println(TAG+" EXIT--->updatePlaylist");
 	}
 	// -------------------------BroadcastReceiver---------------------
 	public class MyWebReceiver extends BroadcastReceiver{
@@ -1293,7 +1329,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
  
 			String reponseMessage = intent.getStringExtra(MyWebService.RESPONSE_MESSAGE);
 			Log.v(LOG_TAG, reponseMessage);
-			System.out.println("22222222222222222222222222222222222222222222222222");
+			System.out.println(TAG+"22222222222222222222222222222222222222222222222222");
 			//parse the JSON response
 			JSONObject responseObj;
 			try { 
@@ -1305,14 +1341,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 						//get the latest version from the JSON string
 						double latestVersion = responseObj.getDouble("latestVersion");
 						//get the lastest application URI from the JSON string
-						System.out.println("latest version code :: "+latestVersion);
-						System.out.println("prev version code :: "+versionName);
+						System.out.println(TAG+"latest version code :: "+latestVersion);
+						System.out.println(TAG+"prev version code :: "+versionName);
 						appURI = responseObj.getString("appURI");
 						//check if we need to upgrade?
 						if(latestVersion > versionName){  
 							//oh yeah we do need an upgrade, let the user know send an alert message
 							AlertDialog.Builder builder = new AlertDialog.Builder(AndroidBuildingMusicPlayerActivity.this);
-							String msg = String.format("There is newer version %.1f of this application available, click OK to upgrade now?", latestVersion);
+							String msg = String.format(TAG+"There is newer version %.1f of this application available, click OK to upgrade now?", latestVersion);
 							builder.setMessage(msg).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 								//if the user agrees to upgrade							
 							
@@ -1355,13 +1391,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		public void onReceive(Context context, Intent intent) { 
 			//check if the broadcast message is for our Enqueued download
 			long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-			System.out.println("==============referenceId: "+ referenceId);
-			System.out.println("==============downloadReference: "+ downloadReference);
+			System.out.println(TAG+"==============referenceId: "+ referenceId);
+			System.out.println(TAG+"==============downloadReference: "+ downloadReference);
 			
 			if(downloadReference == referenceId){ 
 				Log.v(LOG_TAG, "Downloading of the new app version complete");
 				  
-				System.out.println("========getUriForDownloadedFile: "+ downloadManager.getUriForDownloadedFile(downloadReference));				
+				System.out.println(TAG+"========getUriForDownloadedFile: "+ downloadManager.getUriForDownloadedFile(downloadReference));
 				if(downloadManager.getUriForDownloadedFile(downloadReference)!=null){
 					//start the installation of the latest version
 					Intent installIntent = new Intent(Intent.ACTION_VIEW);
@@ -1386,7 +1422,116 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		}
 		return false;
 	}
-	
+	/*********************************************************************************************/
+	/**
+	 * This method plays the voice msgs when required
+	 * @param filename
+	 */
+	private void playVoiceMsg(String filename) {
+		try {
+			voicemp = new MediaPlayer();
+			afd = getAssets().openFd("songs/"+filename);
+			voicemp.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+			afd.close();
+			voicemp.prepare();
+			voicemp.start();
+			System.out.println(TAG+"must play ...");
+		} catch (IOException e) {
+			System.out.println(TAG+"exception...");
+			e.printStackTrace();
+		}
+	}//end of playVoiceMsg
+	/**
+	 * @author Ranvir
+	 * @date 26262016
+	 */
+	public void turnGPSOn()
+	{
+		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+		intent.putExtra("enabled", true);
+		sendBroadcast(intent);
+
+	}
+	/**
+	 * @author Ranvir
+	 * @date 26262016
+	 */
+	// automatic turn off the gps
+	public void turnGPSOff()
+	{
+		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+		intent.putExtra("enabled", false);
+		sendBroadcast(intent);
+
+
+	}
+	/**
+	 * @author Ranvir
+	 * @date 26262016
+	 */
+	boolean swtichDataConnection(boolean ON,Context context)
+	{
+		int bv = Build.VERSION.SDK_INT;
+		try{
+			if(bv == Build.VERSION_CODES.FROYO)
+
+			{
+				Method dataConnSwitchmethod;
+				Class<?> telephonyManagerClass;
+				Object ITelephonyStub;
+				Class<?> ITelephonyClass;
+
+				TelephonyManager telephonyManager = (TelephonyManager) context
+						.getSystemService(Context.TELEPHONY_SERVICE);
+
+				telephonyManagerClass = Class.forName(telephonyManager.getClass().getName());
+				Method getITelephonyMethod = telephonyManagerClass.getDeclaredMethod("getITelephony");
+				getITelephonyMethod.setAccessible(true);
+				ITelephonyStub = getITelephonyMethod.invoke(telephonyManager);
+				ITelephonyClass = Class.forName(ITelephonyStub.getClass().getName());
+
+				if (ON) {
+					dataConnSwitchmethod = ITelephonyClass
+							.getDeclaredMethod("enableDataConnectivity");
+				} else {
+					dataConnSwitchmethod = ITelephonyClass
+							.getDeclaredMethod("disableDataConnectivity");
+				}
+				dataConnSwitchmethod.setAccessible(true);
+				dataConnSwitchmethod.invoke(ITelephonyStub);
+
+			}
+			else
+			{
+				//log.i("App running on Ginger bread+");
+				Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "App running on Ginger bread+", Toast.LENGTH_LONG).show();
+
+				final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+				final Class<?> conmanClass = Class.forName(conman.getClass().getName());
+				final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+				iConnectivityManagerField.setAccessible(true);
+				final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+				final Class<?> iConnectivityManagerClass =  Class.forName(iConnectivityManager.getClass().getName());
+				final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+				setMobileDataEnabledMethod.setAccessible(true);
+				setMobileDataEnabledMethod.invoke(iConnectivityManager, ON);
+				if(ON){
+					Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "Data Connection ON", Toast.LENGTH_LONG).show();
+				}else{
+					Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "Data Connection OFF", Toast.LENGTH_LONG).show();
+				}
+			}
+
+
+			return true;
+		}catch(Exception e){
+			//Log.e(TAG, "error turning on/off data");
+			Toast.makeText(AndroidBuildingMusicPlayerActivity.this, "error turning on/off data", Toast.LENGTH_LONG).show();
+			return false;
+		}
+
+	}//end of swtichDataConnection
+	/*********************************************************************************************/
 	public static boolean closeActivity(){
 		boolean retValue = false;		
 		if(androidBuildingMusicPlayerActivityInstance != null) {

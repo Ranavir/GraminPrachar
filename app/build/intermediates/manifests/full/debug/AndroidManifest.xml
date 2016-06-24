@@ -23,6 +23,8 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Used for auto data connection -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -71,6 +73,9 @@
         <activity android:name="com.stl.musicplayer.PlayListActivity" />
         <activity android:name="com.stl.musicplayer.SettingOptions" />
         <activity android:name="com.stl.musicplayer.ChangeUrlActivity" />
+        <activity
+            android:name="com.stl.musicplayer.RegistrationActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
 
         <service
             android:name="com.stl.musicplayer.MyWebService"

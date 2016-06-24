@@ -3,5 +3,11 @@
 
     <string name="hello">Hello, GraminPRACHAR</string>
     <string name="app_name">GraminPRACHAR</string>
-
+    <string name="company_web">&#169; 2015 | STLINDIA</string>
+    <string name="select_prompt">---Select---</string>
+    <string-array name="state_arrays">
+        <item>ANDHRA PRADESH</item>
+        <item>ODISHA</item>
+        <item>WEST BENGAL</item>
+    </string-array>
 </resources>

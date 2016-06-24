@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#B0BE88"
+                android:orientation="vertical">
+
+    <include
+        android:id="@+id/logoLayout"
+        layout="@layout/header" />
+
+    <!-- Body -->
+
+    <ScrollView
+        android:id="@+id/newUser_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/foot"
+        android:layout_below="@+id/logoLayout"
+        android:layout_margin="@dimen/layout_margin"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorOffWhite"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edittext_height_normal"
+                android:gravity="center"
+                android:paddingBottom="@dimen/text_padding"
+                android:paddingTop="@dimen/text_padding"
+                android:text="Fill Details to Register"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/text_size_normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*State"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <!--<EditText
+                    android:id="@+id/et_state"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor">
+
+                    <requestFocus />
+                </EditText>-->
+                <Spinner
+                    android:id="@+id/sp_state"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:entries="@array/state_arrays"
+                    android:prompt="@string/select_prompt"
+                    android:textSize="@dimen/text_size_normal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Bus Name"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_busname"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Bus Reg No"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_bus_regno"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Sitting Capacity"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_sit_capacity"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Bus Start Time"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_bus_st"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"
+                    android:hint="HH:MM"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Bus End Time"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_bus_et"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"
+                    android:hint="HH:MM"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Owner Name"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_owner_nm"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Owner Contact No"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_owner_cn"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Agent Name"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_agent_nm"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Agent Contact No"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_agent_cn"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height_normal"
+                android:layout_marginBottom="@dimen/layout_padding_small"
+                android:layout_marginTop="@dimen/layout_padding_small"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding"
+                android:paddingRight="@dimen/layout_padding"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/btn_height_normal"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_two"
+                    android:paddingTop="8dp"
+                    android:text="Save"
+                    android:textColor="#B0BE88"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/btn_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/btn_height_normal"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_two"
+                    android:paddingTop="8dp"
+                    android:text="Exit"
+                    android:textColor="#B0BE88"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="normal" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Footer -->
+
+    <LinearLayout
+        android:id="@+id/foot"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edittext_height_normal"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittext_height_normal"
+            android:gravity="center"
+            android:text="@string/company_web"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#d3d3d3"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+</RelativeLayout>

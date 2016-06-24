@@ -174,7 +174,58 @@ public class Utils {
 		System.out.println("utils currTime ::  "+currTime);
 		return currTime;
 	}
-	
+
+	public static String getRegistrationAck(Context context,JSONObject jsonObjRegdDetails) {
+		String line = "";
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		if(checkiInternet(context)){
+			try {
+
+				//System.out.println("Bulk Data ::::::::::::::::: "+gprs_data.toString());
+				ArrayList<NameValuePair> namevaluepair = new ArrayList<NameValuePair>();
+				namevaluepair.add(new BasicNameValuePair("reqId",""));
+				namevaluepair.add(new BasicNameValuePair("regd_details",jsonObjRegdDetails.toString()));
+
+				int timeoutConnection = 20000;
+
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpParams httpParameters = httpClient.getParams();
+				//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+
+				HttpConnectionParams.setConnectionTimeout(httpParameters, REGISTRATION_TIMEOUT);
+				HttpConnectionParams.setSoTimeout(httpParameters, WAIT_TIMEOUT);
+				ConnManagerParams.setTimeout(httpParameters, WAIT_TIMEOUT);
+
+
+
+
+				HttpPost httpPost = new HttpPost(SERVER_URL);
+				httpPost.setEntity(new UrlEncodedFormEntity(namevaluepair));
+				HttpResponse response = httpClient.execute(httpPost);
+
+				StatusLine statusLine = response.getStatusLine();
+				if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+					BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					while ((line= rd.readLine()) != null){
+					}
+				}else{
+
+				}
+
+			} catch (Exception e) {
+				//msg="Unable to connect to the server.";
+				e.printStackTrace();
+			}
+		}else{
+			//msg="Sorry, No Internet Connection";
+			//Toast.makeText(context, "Sorry, No Internet Connection", Toast.LENGTH_LONG).show();
+		}
+		return line;
+
+	}//end getRegistrationAck
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@SuppressLint("NewApi")
 	public static String getInputDataFromServer(String imei,Context context) {

@@ -37,7 +37,7 @@ public class DatabaseUtil {
 		public void onCreate(SQLiteDatabase db) {
 			System.out.println("create db----");
 			try{
-				db.execSQL("CREATE TABLE  if not exists regd_details ("+
+				/*db.execSQL("CREATE TABLE  if not exists regd_details ("+
 						  "id integer PRIMARY KEY,"+
 						  "first_name text,"+
 						  "last_name text," +
@@ -47,6 +47,25 @@ public class DatabaseUtil {
 						  "end_date text," +
 						  "duration text," +
 						  "imei_no text);"
+				);*/
+				db.execSQL("CREATE TABLE  if not exists regd_details ("+
+								"id integer PRIMARY KEY,"+
+								"imei_no text,"+
+								"state text,"+
+								"bus_name text," +
+								"bus_reg_no text," +
+								"sit_cap text,"+
+								"bus_st text," +
+								"bus_et text," +
+								"own_nm text," +
+								"own_cn text," +
+								"agent_nm text," +
+								"agent_cn text,"+
+								"status text,"+
+								"created_by text,"+
+								"created_on text,"+
+								"updated_on text"+
+							");"
 				);
 				db.execSQL("CREATE TABLE  if not exists play_list ("+
 						  "id integer PRIMARY KEY," +
@@ -122,7 +141,7 @@ public class DatabaseUtil {
 				db.execSQL("create table if not exists host_detail(ip_address text, port_no text)");
 				//db.execSQL("insert or replace into host_detail(ip_address, port_no) values('208.109.208.91','80')");
 				//db.execSQL("insert or replace into host_detail(ip_address, port_no) values('192.168.0.124','8080')");
-				db.execSQL("insert or replace into host_detail(ip_address, port_no) values('97.74.6.100','8080')");
+				db.execSQL("insert or replace into host_detail(ip_address, port_no) values('192.168.0.38','8080')");
 				
 				String query = String.format("insert or replace into play_song_index(id, play_date, song_index) values('1','%s','0')", Utils.getDate("yyyy-MM-dd"));
 				db.execSQL(query);
@@ -164,7 +183,7 @@ public class DatabaseUtil {
 
 	}
 	public void truncateTable(String table){
-		db.execSQL("DELETE FROM "+table);
+		db.execSQL("DELETE FROM " + table);
 	}
 	public void close(){
 		helper.close();
@@ -241,22 +260,86 @@ public class DatabaseUtil {
 		long rowId = 0;
 		try{
 			ContentValues value = new ContentValues();
-			value.put("first_name",  	input.getString("fname").trim());
+			/*value.put("first_name",  	input.getString("fname").trim());
 			value.put("last_name", 		input.getString("lname"));
 			value.put("phone", 			input.getString("phone").trim());
 			value.put("email",  		input.getString("email").trim());
 			value.put("regd_date",  	input.getString("regd_date").trim());
 			value.put("end_date",  		input.getString("end_date").trim());
 			value.put("duration",  		input.getString("duration").trim());
-			value.put("imei_no",  		input.getString("imei").trim());
-			
+			value.put("imei_no",  		input.getString("imei").trim());*/
+
+			value.put("imei_no",  		input.getString("imei_no").trim());
+			value.put("state",  	    input.getString("state").trim());
+			value.put("bus_name", 		input.getString("bus_name"));
+			value.put("bus_reg_no",     input.getString("bus_reg_no").trim());
+			value.put("sit_cap",  		input.getString("sit_cap").trim());
+			value.put("bus_st",  		input.getString("bus_st").trim());
+			value.put("bus_et",  		input.getString("bus_et").trim());
+			value.put("own_nm",  		input.getString("own_nm").trim());
+			value.put("own_cn",  		input.getString("own_cn").trim());
+			value.put("agent_nm",  		input.getString("agent_nm").trim());
+			value.put("agent_cn",  		input.getString("agent_cn").trim());
+			value.put("status",  		"1");//change to 0 after server side registration servlet implementation
+			value.put("created_by",  	input.getString("agent_nm").trim());
+			value.put("created_on",  	Utils.getDate("yyyy-MM-dd HH:mm:ss"));
+
 			rowId=db.insert("regd_details", null, value);
 		
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			db.close();
 		}
 		return rowId;
-	}
+	}//end of logRegdDetails
+	public int updateRegdStatus(long id, String status) {
+		int count = 0 ;
+		try{
+			db = helper.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			values.put("status", status);
+			values.put("updated_on", Utils.getDate("yyyy-MM-dd HH:mm:ss"));
+			count = db.update("regd_details", values, "id = ?", new String[] { String.valueOf(id) }) ;
+		}finally{
+			db.close();
+		}
+		return count ;
+	}//end of updateRegdStatus
+	public JSONObject getRegdDetails() {
+		JSONObject obj = null;
+		try {
+			db = helper.getReadableDatabase();
+			String qry = String.format("select * from regd_details");
+			Cursor c = db.rawQuery(qry, null);
+
+			if (c.moveToFirst()) {
+				obj = new JSONObject();
+				obj.put("id", c.getString(c.getColumnIndex("id")));
+				obj.put("imei_no", c.getString(c.getColumnIndex("imei_no")));
+				obj.put("state", c.getString(c.getColumnIndex("state")));
+				obj.put("bus_name", c.getString(c.getColumnIndex("bus_name")));
+				obj.put("bus_reg_no", c.getString(c.getColumnIndex("bus_reg_no")));
+				obj.put("sit_cap", c.getString(c.getColumnIndex("sit_cap")));
+				obj.put("bus_st", c.getString(c.getColumnIndex("bus_st")));
+				obj.put("bus_et", c.getString(c.getColumnIndex("bus_et")));
+				obj.put("own_nm", c.getString(c.getColumnIndex("own_nm")));
+				obj.put("own_cn", c.getString(c.getColumnIndex("own_cn")));
+				obj.put("agent_nm", c.getString(c.getColumnIndex("agent_nm")));
+				obj.put("agent_cn", c.getString(c.getColumnIndex("agent_cn")));
+				obj.put("status", c.getString(c.getColumnIndex("status")));
+				obj.put("created_by", c.getString(c.getColumnIndex("created_by")));
+				obj.put("created_on", c.getString(c.getColumnIndex("created_on")));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		return obj;
+	}//end of getRegdDetails
+
 	public long logPhotoDetails(String imageName) {
 		db = helper.getWritableDatabase();
 		long rowId = 0;

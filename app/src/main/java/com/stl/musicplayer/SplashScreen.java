@@ -63,7 +63,8 @@ public class SplashScreen extends Activity {
 	                    progress += 2;
 	                    pb.setProgress(progress);
 	                }
-	                Intent i = new Intent(SplashScreen.this, AndroidBuildingMusicPlayerActivity.class);
+	                //Intent i = new Intent(SplashScreen.this, AndroidBuildingMusicPlayerActivity.class);
+					Intent i = new Intent(SplashScreen.this, RegistrationActivity.class);
 	                startActivity(i);
 	                finish();	                
 	            } catch (InterruptedException e) {

@@ -714,6 +714,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
         	case R.id.action_settings:
         		startActivity(new Intent(getApplicationContext(), SettingOptions.class));
         		return false;
+			case R.id.action_dashboard:
+				//startActivity(new Intent(getApplicationContext(), SettingOptions.class));
+				return false;
         	default:
         		return super.onOptionsItemSelected(item);
         }
@@ -725,7 +728,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	     int action = event.getAction();
 	     int keyCode = event.getKeyCode();
 	     AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-	     
+
 	     System.out.println(TAG+"max volume: " + am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)+"   curr volume: " + am.getStreamVolume(AudioManager.STREAM_MUSIC));
 	    
 	     switch (keyCode) {
@@ -817,7 +820,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	        util.close();
 		}
 	}
-	
+
 	public boolean handleHeadphonesState(Context context){
 		AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
 		if(am.isWiredHeadsetOn()) {
@@ -1323,7 +1326,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	public class MyWebReceiver extends BroadcastReceiver{
 		 
 		public static final String PROCESS_RESPONSE = "com.stl.musicplayer.intent.action.PROCESS_RESPONSE";
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
  

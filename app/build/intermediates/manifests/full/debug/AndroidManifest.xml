@@ -33,7 +33,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name="com.stl.musicplayer.SplashScreen"
+            android:name="com.stl.musicplayer.app.SplashScreen"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -48,7 +48,7 @@
         <!--
         Main activity
         <activity
-            android:name="com.stl.musicplayer.AndroidBuildingMusicPlayerActivity"
+            android:name="com.stl.musicplayer.app.AndroidBuildingMusicPlayerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation"
@@ -64,25 +64,25 @@
 
         <!-- Main activity -->
         <activity
-            android:name="com.stl.musicplayer.AndroidBuildingMusicPlayerActivity"
+            android:name="com.stl.musicplayer.app.AndroidBuildingMusicPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.stl.musicplayer.PlayListActivity" />
-        <activity android:name="com.stl.musicplayer.SettingOptions" />
-        <activity android:name="com.stl.musicplayer.ChangeUrlActivity" />
+        <activity android:name="com.stl.musicplayer.app.PlayListActivity" />
+        <activity android:name="com.stl.musicplayer.app.SettingOptions" />
+        <activity android:name="com.stl.musicplayer.app.ChangeUrlActivity" />
         <activity
-            android:name="com.stl.musicplayer.RegistrationActivity"
+            android:name="com.stl.musicplayer.app.RegistrationActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
 
         <service
-            android:name="com.stl.musicplayer.MyWebService"
+            android:name="com.stl.musicplayer.app.MyWebService"
             android:enabled="true" />
 
         <receiver
-            android:name="com.stl.musicplayer.BootUpReceiver"
+            android:name="com.stl.musicplayer.app.BootUpReceiver"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
             <intent-filter>
@@ -94,12 +94,12 @@
         </receiver>
 
         <service
-            android:name="com.stl.musicplayer.ServiceBootComplete"
+            android:name="com.stl.musicplayer.app.ServiceBootComplete"
             android:enabled="true"
             android:exported="true" >
         </service>
 
-        <receiver android:name="com.stl.musicplayer.PowerConnectionReceiver2" >
+        <receiver android:name="com.stl.musicplayer.app.PowerConnectionReceiver2" >
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />

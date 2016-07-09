@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="#4a4a4a"> 
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#4a4a4a">
     
     <!-- Player Header -->
     <LinearLayout 
@@ -25,6 +25,13 @@
             android:paddingLeft="10dp"
             android:textStyle="bold"
             android:text="No Song Assigned to You !"
+
+            android:ellipsize="marquee"
+            android:scrollHorizontally="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
             android:layout_marginTop="10dp"/>"
         
         <!-- Playlist button -->
@@ -54,7 +61,7 @@
         android:id="@+id/player_footer_bg"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/songThumbnail"
+        android:layout_below="@+id/songThumbnail"
         android:background="@layout/bg_player_footer"
         android:gravity="center">
     	
@@ -173,13 +180,283 @@
             android:background="@null"/>
     </LinearLayout>-->
 
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/cameraView"
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:layout_below="@+id/player_footer_bg"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp" >
-    </FrameLayout>
-    
+    </FrameLayout>-->
+
+    <LinearLayout
+        android:id="@+id/report_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/player_footer_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="1dip">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="6"
+            android:background="@drawable/report_header"
+            >
+            <Spinner
+                android:id="@+id/sp_report_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|start"
+                android:entries="@array/report_types"
+                android:prompt="@string/select_prompt"
+                android:layout_weight="4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Date..."
+                android:id="@+id/tv_date"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlue"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnChangeDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change\nDate"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/report_body_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_report"
+            android:weightSum="2">
+            <!--<TableRow
+                android:id="@+id/tabla_cabecera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TableRow>-->
+
+            <TableLayout
+                android:id="@+id/tabla_report"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3">
+
+                <TableRow
+                    android:id="@+id/tr_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:id="@+id/tv_th1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_head_0"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_th2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_head_1"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_th3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_head_2"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_th4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_head_3"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_th5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_head_4"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tr_body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_td1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_body_1"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_td5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tr_body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tv_td6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="@string/report_body_2"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlue"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_td9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_td10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cell_shape"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout><!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/layout/player.xml -->

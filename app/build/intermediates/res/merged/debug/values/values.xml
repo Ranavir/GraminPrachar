@@ -2,9 +2,13 @@
 <resources>
     <!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/values/strings.xml -->
     <eat-comment/>
+    <string-array name="report_types">
+        <item>Day Report</item>
+        <item>Month Report</item>
+    </string-array>
     <string-array name="state_arrays">
-        <item>ANDHRA PRADESH</item>
         <item>ODISHA</item>
+        <item>AP</item>
         <item>WEST BENGAL</item>
     </string-array>
     <!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/values/colors.xml -->
@@ -12,6 +16,7 @@
     <color name="blue">#0000ff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBlue">#4aaace</color>
+    <color name="colorBtnEvent">#4A4A4A</color>
     <color name="colorButtonBack">#f0f0f0</color>
     <color name="colorDarkBlue">#00739f</color>
     <color name="colorGrey">#adadad</color>
@@ -80,5 +85,12 @@
     <string name="app_name">GraminPRACHAR</string>
     <string name="company_web">© 2015 | STLINDIA</string>
     <string name="hello">Hello, GraminPRACHAR</string>
+    <string name="report_body_1">Songs</string>
+    <string name="report_body_2">Adds</string>
+    <string name="report_head_0">Details</string>
+    <string name="report_head_1">Total play\ntime(In Hrs.)</string>
+    <string name="report_head_2">Start\nTime</string>
+    <string name="report_head_3">End\nTime</string>
+    <string name="report_head_4">Pause\nCount</string>
     <string name="select_prompt">---Select---</string>
 </resources>

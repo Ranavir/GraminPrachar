@@ -78,7 +78,116 @@
                     android:prompt="@string/select_prompt"
                     android:textSize="@dimen/text_size_normal" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Owner Name"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+                <Spinner
+                    android:id="@+id/sp_owner_nm"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:prompt="@string/select_prompt"
+                    android:textSize="@dimen/text_size_normal" />
+                <!--<EditText
+                    android:id="@+id/et_owner_nm"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>-->
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Owner Contact No"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <EditText
+                    android:id="@+id/et_owner_cn"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:singleLine="true"
+                    android:editable="false"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/layout_padding_small"
+                android:paddingRight="@dimen/layout_padding_small"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:text="*Bus Reg No"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>
+
+                <!--<EditText
+                    android:id="@+id/et_bus_regno"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="@color/txtcolor"/>-->
+                <Spinner
+                    android:id="@+id/sp_bus_regno"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/edittext_height_normal"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:prompt="@string/select_prompt"
+                    android:textSize="@dimen/text_size_normal" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -106,41 +215,12 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:singleLine="true"
+                    android:editable="false"
                     android:textSize="@dimen/text_size_normal"
                     android:textColor="@color/txtcolor"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="@dimen/layout_margin"
-                android:layout_marginRight="@dimen/layout_margin"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/layout_padding_small"
-                android:paddingRight="@dimen/layout_padding_small"
-                android:weightSum="2">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/edittext_height_normal"
-                    android:layout_weight="1"
-                    android:text="*Bus Reg No"
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
-
-                <EditText
-                    android:id="@+id/et_bus_regno"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/edittext_height_normal"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:password="true"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,38 +317,6 @@
                     android:hint="HH:MM"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="@dimen/layout_margin"
-                android:layout_marginRight="@dimen/layout_margin"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/layout_padding_small"
-                android:paddingRight="@dimen/layout_padding_small"
-                android:weightSum="2">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/edittext_height_normal"
-                    android:layout_weight="1"
-                    android:text="*Owner Name"
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
-
-                <EditText
-                    android:id="@+id/et_owner_nm"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/edittext_height_normal"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
-            </LinearLayout>
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -286,12 +334,12 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/edittext_height_normal"
                     android:layout_weight="1"
-                    android:text="*Owner Contact No"
+                    android:text="*Agent Id"
                     android:textSize="@dimen/text_size_normal"
                     android:textColor="@color/txtcolor"/>
 
                 <EditText
-                    android:id="@+id/et_owner_cn"
+                    android:id="@+id/et_agent_id"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/edittext_height_normal"
                     android:layout_weight="1"
@@ -300,7 +348,6 @@
                     android:textSize="@dimen/text_size_normal"
                     android:textColor="@color/txtcolor"/>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

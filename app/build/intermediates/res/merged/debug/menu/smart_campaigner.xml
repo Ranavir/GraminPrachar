@@ -4,7 +4,11 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Settings"/>
-
+    <item
+        android:id="@+id/action_dashboard"
+        android:orderInCategory="101"
+        android:showAsAction="never"
+        android:title="Dashboard"/>
      
 </menu>
 <!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/menu/smart_campaigner.xml -->

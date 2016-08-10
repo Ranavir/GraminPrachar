@@ -1,8 +1,12 @@
 package com.stl.musicplayer.app;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +30,8 @@ public class DatabaseUtil {
 		 helper = new MyHelper(context);
 		 db = helper.getWritableDatabase();
 	}
+
+
 
 	public class MyHelper extends SQLiteOpenHelper{
 
@@ -413,7 +419,7 @@ public class DatabaseUtil {
 		try{
 			//id, playlist_id, song_id, song_name, start_date, end_date
 			String qry = String.format("select * from play_list where Date(start_date) = Date('%s') order by created_date, song_id", Utils.getDate("yyyy-MM-dd"));
-			System.out.println("query : "+qry);
+			System.out.println("query : " + qry);
 			Cursor c = db.rawQuery(qry, null);
 			if(c.moveToFirst()){
 				Utils.playDate = c.getString(c.getColumnIndex("start_date"));
@@ -435,6 +441,90 @@ public class DatabaseUtil {
 		}
 		return songsList;		
 	}
+
+	/***************************************************
+	 * This method used for daily reporting purpose
+	 * @return JSONObject
+	 **************************************************/
+	public JSONObject getDailyReports(String date) {
+		Log.d(TAG, "Entry---> getDailyReports");
+		JSONObject obj = new JSONObject();
+		int scount = 0;
+		int acount = 0 ;
+
+		Long stt = 0L ;
+		String att = "00:00:00";
+		String sst = "00:00:00";
+		String ast = "00:00:00" ;
+		String set = "00:00:00" ;
+		String aet = "00:00:00" ;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a");
+		int spc = 0,apc = 0 ;
+		try {
+			db = helper.getReadableDatabase();
+
+			String qry1 = String.format("select song_name,start_time,end_time from play_song_details where play_date = Date('%s')",
+					new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("dd-MM-yyyy").parse(date)));
+			System.out.println(TAG + "qry1::" + qry1);
+			Cursor c = db.rawQuery(qry1, null);
+			if (c.moveToFirst()) {
+
+				do{
+					scount++ ;
+					if(scount == 1){//do only once
+						sst = timeFormat.format(format.parse(c.getString(c.getColumnIndex("start_time"))));
+
+					}
+					if(null != c.getString(c.getColumnIndex("end_time"))) {
+						set = timeFormat.format(format.parse(c.getString(c.getColumnIndex("end_time"))));//update each time
+						//System.out.println(TAG + "set::" + set);
+						//stt = ?
+						String startTime = c.getString(c.getColumnIndex("start_time")) ;
+						String endTime = c.getString(c.getColumnIndex("end_time")) ;
+						stt += format.parse(endTime).getTime() - format.parse(startTime).getTime();
+					}
+
+				}while(c.moveToNext());
+
+			}//end if stmt of database reading
+			//Query for pause details
+			String qry2 = String.format("select count(*) from play_song_pause_detail where play_date = Date('%s')",
+					new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("dd-MM-yyyy").parse(date)));
+			System.out.println(TAG + "qry2::" + qry2);
+			Cursor c1 = db.rawQuery(qry2, null);
+			if (c1.moveToFirst()) {
+
+				//do{
+					spc = c1.getInt(0);
+				System.out.println(TAG+"spc::"+spc);
+				//}while(c1.moveToNext());
+
+			}//end if stmt of database reading
+			String strStt = String.format("%02d:%02d:%02d",
+					TimeUnit.MILLISECONDS.toHours(stt),
+					TimeUnit.MILLISECONDS.toMinutes(stt) -
+							TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(stt)), // The change is in this line
+					TimeUnit.MILLISECONDS.toSeconds(stt) -
+							TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(stt)));
+			obj.put("song_total_time",strStt);
+			obj.put("song_start_time",sst);
+			obj.put("song_end_time",set);
+			obj.put("song_pause_count",spc);
+
+			obj.put("add_total_time",att);
+			obj.put("add_start_time",ast);
+			obj.put("add_end_time",aet);
+			obj.put("add_pause_count",apc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		System.out.println(TAG+"obj::"+obj);
+		Log.d(TAG,"Exit---> getDailyReports");
+		return obj;
+	}//end of getDailyReports
 
 	public long logPlaySongDetails(String songTitle, double latitude, double longitude, String plylistid) {
 		db = helper.getWritableDatabase();
@@ -596,7 +686,7 @@ public class DatabaseUtil {
 	}
 	
 	public void deleteOldPlaylistAndData(){
-		System.out.println("Delete old playlist and successfully uploaded data");
+		System.out.println(TAG+"Delete old playlist and successfully uploaded data");
 		db = helper.getWritableDatabase();
 		//String qry 	= String.format("DELETE FROM play_list where Date(end_date) < Date('%s')", Utils.getDate("yyyy-MM-dd"));
 		String qry 	= String.format("DELETE FROM play_list where Date(start_date) < Date('%s')", Utils.getDate("yyyy-MM-dd"));
@@ -613,7 +703,7 @@ public class DatabaseUtil {
 		db.execSQL(qry4);
 		
 		Cursor  c = db.rawQuery(qry5,null);
-		System.out.println("delete query : "+qry5);
+		System.out.println(TAG+"delete query : "+qry5);
 		if(c.moveToFirst()){
 		   do{
 			   Utils.deletePhoto(c.getString(c.getColumnIndex("image_name")));

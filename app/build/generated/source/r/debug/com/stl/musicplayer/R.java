@@ -9,8 +9,7 @@ package com.stl.musicplayer;
 
 public final class R {
     public static final class array {
-        public static final int report_types=0x7f050000;
-        public static final int state_arrays=0x7f050001;
+        public static final int state_arrays=0x7f050000;
     }
     public static final class attr {
     }
@@ -150,9 +149,9 @@ public final class R {
         public static final int user=0x7f02003f;
     }
     public static final class id {
-        public static final int action_close=0x7f09004b;
-        public static final int action_dashboard=0x7f09004d;
-        public static final int action_settings=0x7f09004c;
+        public static final int action_close=0x7f09004c;
+        public static final int action_dashboard=0x7f09004e;
+        public static final int action_settings=0x7f09004d;
         public static final int applicationVersion=0x7f090017;
         public static final int btnBackward=0x7f090025;
         public static final int btnChangeDate=0x7f090030;
@@ -177,6 +176,7 @@ public final class R {
         public static final int et_owner_cn=0x7f090005;
         public static final int et_sit_capacity=0x7f090008;
         public static final int foot=0x7f090002;
+        public static final int horizontalView=0x7f090031;
         public static final int imageView1=0x7f09001e;
         public static final int ipAddr=0x7f090019;
         public static final int logoLayout=0x7f090000;
@@ -185,13 +185,13 @@ public final class R {
         public static final int player_header_bg=0x7f09001f;
         public static final int portNum=0x7f09001b;
         public static final int progress_bar=0x7f090016;
-        public static final int regdBtn=0x7f09004a;
-        public static final int regdEmailEt=0x7f090049;
-        public static final int regdFirstNameEt=0x7f090046;
-        public static final int regdLastNameEt=0x7f090047;
-        public static final int regdPhoneEt=0x7f090048;
-        public static final int regdlinearLayout=0x7f090045;
-        public static final int report_body_layout=0x7f090031;
+        public static final int regdBtn=0x7f09004b;
+        public static final int regdEmailEt=0x7f09004a;
+        public static final int regdFirstNameEt=0x7f090047;
+        public static final int regdLastNameEt=0x7f090048;
+        public static final int regdPhoneEt=0x7f090049;
+        public static final int regdlinearLayout=0x7f090046;
+        public static final int report_body_layout=0x7f090032;
         public static final int report_layout=0x7f09002d;
         public static final int sendBulkDataBtn=0x7f090010;
         public static final int songCurrentDurationLabel=0x7f09002b;
@@ -201,32 +201,32 @@ public final class R {
         public static final int songTotalDurationLabel=0x7f09002c;
         public static final int sp_bus_regno=0x7f090006;
         public static final int sp_owner_nm=0x7f090004;
-        public static final int sp_report_type=0x7f09002e;
         public static final int sp_state=0x7f090003;
         public static final int start_button=0x7f090014;
-        public static final int tabla_report=0x7f090032;
+        public static final int tabla_report=0x7f090033;
         public static final int textView1=0x7f090015;
         public static final int textView2=0x7f09001a;
         public static final int timerDisplay=0x7f09002a;
-        public static final int tr_body1=0x7f090039;
-        public static final int tr_body2=0x7f09003f;
-        public static final int tr_header=0x7f090033;
+        public static final int tr_body1=0x7f09003a;
+        public static final int tr_body2=0x7f090040;
+        public static final int tr_header=0x7f090034;
         public static final int tv_date=0x7f09002f;
-        public static final int tv_td1=0x7f09003a;
-        public static final int tv_td10=0x7f090044;
-        public static final int tv_td2=0x7f09003b;
-        public static final int tv_td3=0x7f09003c;
-        public static final int tv_td4=0x7f09003d;
-        public static final int tv_td5=0x7f09003e;
-        public static final int tv_td6=0x7f090040;
-        public static final int tv_td7=0x7f090041;
-        public static final int tv_td8=0x7f090042;
-        public static final int tv_td9=0x7f090043;
-        public static final int tv_th1=0x7f090034;
-        public static final int tv_th2=0x7f090035;
-        public static final int tv_th3=0x7f090036;
-        public static final int tv_th4=0x7f090037;
-        public static final int tv_th5=0x7f090038;
+        public static final int tv_report_type=0x7f09002e;
+        public static final int tv_td1=0x7f09003b;
+        public static final int tv_td10=0x7f090045;
+        public static final int tv_td2=0x7f09003c;
+        public static final int tv_td3=0x7f09003d;
+        public static final int tv_td4=0x7f09003e;
+        public static final int tv_td5=0x7f09003f;
+        public static final int tv_td6=0x7f090041;
+        public static final int tv_td7=0x7f090042;
+        public static final int tv_td8=0x7f090043;
+        public static final int tv_td9=0x7f090044;
+        public static final int tv_th1=0x7f090035;
+        public static final int tv_th2=0x7f090036;
+        public static final int tv_th3=0x7f090037;
+        public static final int tv_th4=0x7f090038;
+        public static final int tv_th5=0x7f090039;
         public static final int urlTv=0x7f090018;
     }
     public static final class layout {

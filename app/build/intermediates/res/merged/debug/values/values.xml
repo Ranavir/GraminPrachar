@@ -2,10 +2,6 @@
 <resources>
     <!-- From: file:/D:/AndroidDev/GraminPrachar/app/src/main/res/values/strings.xml -->
     <eat-comment/>
-    <string-array name="report_types">
-        <item>Day Report</item>
-        <item>Month Report</item>
-    </string-array>
     <string-array name="state_arrays">
         <item>ODISHA</item>
         <item>AP</item>
@@ -88,7 +84,7 @@
     <string name="report_body_1">Songs</string>
     <string name="report_body_2">Adds</string>
     <string name="report_head_0">Details</string>
-    <string name="report_head_1">Total play\ntime(In Hrs.)</string>
+    <string name="report_head_1">Total\nDuration</string>
     <string name="report_head_2">Start\nTime</string>
     <string name="report_head_3">End\nTime</string>
     <string name="report_head_4">Pause\nCount</string>

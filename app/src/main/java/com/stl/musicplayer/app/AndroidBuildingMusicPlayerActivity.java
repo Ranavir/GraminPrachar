@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -137,7 +138,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 	//dashboard
 	LinearLayout report_layout;
-	Spinner sp_report_type;
+	TextView tv_report_type ;
 	TextView tv_date;
 	Button btnChangeDate ;
 	String mStDate ;
@@ -147,10 +148,10 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private int month;
 	private int day;
 	static final int DATE_DIALOG_ID = 999;
-	private static final String[] sArrReportTypes = new String[]{"Day Report","Month Report"};
 	private boolean sp_flag = false ;
 	ArrayList<ReportModel> mReportModels;
-
+	DatabaseUtil mDatabaseUtil = null;
+	TextView tv_td2,tv_td3,tv_td4,tv_td5,tv_td7,tv_td8,tv_td9,tv_td10;
 	//TextView tv_cal_header ;
 	Intent backendServiceIntent, mediaDownloadIntent, serviceBootCompleteIntent;
 	@SuppressWarnings("deprecation")
@@ -222,6 +223,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		//btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
 		songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
 		songTitleLabel = (TextView) findViewById(R.id.songTitle);
+		//songTitleLabel.setSelected(true);
 		songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
 		
@@ -303,9 +305,18 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			}
 		}
 		report_layout = (LinearLayout)findViewById(R.id.report_layout);
-		sp_report_type = (Spinner)findViewById(R.id.sp_report_type);
+		tv_report_type = (TextView)findViewById(R.id.tv_report_type);
 		tv_date = (TextView)findViewById(R.id.tv_date);
 		btnChangeDate = (Button)findViewById(R.id.btnChangeDate);
+		tv_td2 = (TextView)findViewById(R.id.tv_td2);
+		tv_td3 = (TextView)findViewById(R.id.tv_td3);
+		tv_td4 = (TextView)findViewById(R.id.tv_td4);
+		tv_td5 = (TextView)findViewById(R.id.tv_td5);
+		tv_td7 = (TextView)findViewById(R.id.tv_td7);
+		tv_td8 = (TextView)findViewById(R.id.tv_td8);
+		tv_td9 = (TextView)findViewById(R.id.tv_td9);
+		tv_td10 = (TextView)findViewById(R.id.tv_td10);
+
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH) + 1 ;
@@ -313,47 +324,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		tv_date.setText(new StringBuilder().append((day) <= 9 ? "0" + (day) : (day))
 						.append("-").append((month) <= 9 ? "0" + (month) : (month)).append("-").append(year)
 		);//dd-mm-yyyy
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,sArrReportTypes);
-		sp_report_type.setAdapter(adapter);
-		/********************************************************************
-			1 - set date field value(date OR month) according to type
-			2 - Call to reporting with proper reporting type and (date OR month)
-		 *********************************************************************/
-		sp_report_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if (sp_flag) {//to avoid first time selection
-					System.out.println(TAG + " Report Type selected::" + parent.getItemAtPosition(position).toString());
-					//get the date value from date field
-					String date = tv_date.getText().toString();
-					try {
-						if (sArrReportTypes[0].equals(parent.getItemAtPosition(position).toString())) {//day wise report
-							//changed to day wise from month wise
+		showDailyReport(tv_date.getText().toString());
 
-							tv_date.setText(
-									new SimpleDateFormat("dd-MM-yyyy").format(new SimpleDateFormat("dd MMM yyyy").parse("01 " + date))
-							);//dd-mm-yyyy
-							Toast.makeText(getApplicationContext(),"Show day wise report....",Toast.LENGTH_SHORT).show();
-						} else if (sArrReportTypes[1].equals(parent.getItemAtPosition(position).toString())) {//month wise report
-							//changed to month wise from day wise
-							tv_date.setText(
-									new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("dd-MM-yyyy").parse(date))
-							);//dd-mm-yyyy
-							Toast.makeText(getApplicationContext(),"Show month wise report....",Toast.LENGTH_SHORT).show();
-						}
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				} else {
-					sp_flag = true;
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-
-			}
-		});
 
 
 		btnChangeDate.setOnClickListener(new View.OnClickListener() {
@@ -366,15 +338,6 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			}
 
 		});
-		/*
-			Report work
-		 */
-
-		/*mReportModels = new ArrayList<ReportModel>();
-		ReportModel headerModel = new ReportModel("Details",
-				"Total play\ntime(In Hrs.)", "Start\nTime", "End\nTime", "Pause\nCount");
-		mReportModels.add(headerModel);*/
-
 
 
 
@@ -412,16 +375,55 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 
 	}//end of onCreate
+
+	private void showDailyReport(String date) {
+		System.out.println(TAG+"Begin showDailyReport");
+		System.out.println(TAG+"date = "+date);
+		JSONObject obj = null ;
+		mDatabaseUtil = new DatabaseUtil(getApplicationContext());
+		try {
+
+			//call to reporting accordingly
+			//Toast.makeText(getApplicationContext(),"Show day wise report....",Toast.LENGTH_SHORT).show();
+			/****************************************************/
+			obj = mDatabaseUtil.getDailyReports(date);
+			//Toast.makeText(getApplicationContext(),"obj::"+obj,Toast.LENGTH_SHORT).show();
+
+			/****************************************************/
+
+			tv_td2.setText(obj.get("song_total_time").toString());
+			tv_td3.setText(obj.get("song_start_time").toString());
+			tv_td4.setText(obj.get("song_end_time").toString());
+			tv_td5.setText(obj.get("song_pause_count").toString());
+
+			tv_td7.setText(obj.get("add_total_time").toString());
+			tv_td8.setText(obj.get("add_start_time").toString());
+			tv_td9.setText(obj.get("add_end_time").toString());
+			tv_td10.setText(obj.get("add_pause_count").toString());
+		}catch (JSONException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if(null != mDatabaseUtil){
+				mDatabaseUtil.close();
+			}
+		}
+
+		System.out.println(TAG+"End showDailyReport");
+	}
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 			case DATE_DIALOG_ID:
 				// set date picker as current date
 				mDatePickerDialog = new DatePickerDialog(this, datePickerListener,
-						year, month,day);
+						year, month-1,day);
 
 				try {
 					mDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mStDate).getTime());
+					mDatePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
@@ -444,29 +446,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			 2 - Call to reporting with proper reporting type and (date OR month)
 			 *********************************************************************/
 			//get the type of from the spinner
-			String value = sp_report_type.getSelectedItem().toString() ;
 			String choosenDate = new StringBuilder().append((day) <= 9 ? "0" + (day) : (day))
 					.append("-").append((month) <= 9 ? "0" + (month) : (month)).append("-").append(year).toString();
-			if(value.equals(sArrReportTypes[0])){//day wise selected also it is default for first time
-				// set selected date into textview
-				tv_date.setText(choosenDate);//dd-mm-yyyy
-				//call to reporting accordingly
-				Toast.makeText(getApplicationContext(),"Show day wise report....",Toast.LENGTH_SHORT).show();
-			}else if(value.equals(sArrReportTypes[1])){//month wise selected
-				// set selected date into textview
-				try {
-					tv_date.setText(
-                            new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("dd-MM-yyyy").parse(choosenDate))
-					);//dd-mm-yyyy
-					//call to reporting accordingly
-					Toast.makeText(getApplicationContext(),"Show month wise report....",Toast.LENGTH_SHORT).show();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+			// set selected date into textview
+			tv_date.setText(choosenDate);//dd-mm-yyyy
 
-			}
-
-
+			showDailyReport(choosenDate);
 		}
 	};
 
@@ -660,7 +645,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			
 			if(songsList.size()>0){
 				if(handleHeadphonesState(getApplicationContext())){
-					if(isConnected(getApplicationContext())){
+					//if(isConnected(getApplicationContext())){
 						if(getCurrentVolume()>=8){
 							Utils.playlistUpdate=false;
 							mp.reset();
@@ -679,7 +664,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 								isStarted=true;
 								// Displaying Song title
 								String songTitle = songsList.get(songIndex).get("songTitle");
-					        	songTitleLabel.setText("\t\t\t\t\t\t\t"+songTitle+"\t\t\t\t\t\t\t");
+					        	songTitleLabel.setText(songTitle+"                                   ");
 					        	songName=songTitle+".mp3";
 					        	plylistname=songsList.get(songIndex).get("plylistname");
 					        	// Changing Button Image to pause image
@@ -744,10 +729,10 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 							songTitleLabel.setText("Volume Should be more than 8");
 							//showAlertDialog("Volume Should be more than 8");
 						}
-					}else{
+					/*}else{
 						songTitleLabel.setText("Connect charger");
 						showAlertDialog("Connect charger");
-					}
+					}*/
 					
 				}else{
 					songTitleLabel.setText("Insert Speaker Pin");

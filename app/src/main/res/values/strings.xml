@@ -6,7 +6,7 @@
     <string name="company_web">&#169; 2015 | STLINDIA</string>
     <string name="select_prompt">---Select---</string>
     <string name="report_head_0">Details</string>
-    <string name="report_head_1">Total play\ntime(In Hrs.)</string>
+    <string name="report_head_1">Total\nDuration</string>
     <string name="report_head_2">Start\nTime</string>
     <string name="report_head_3">End\nTime</string>
     <string name="report_head_4">Pause\nCount</string>
@@ -16,10 +16,6 @@
         <item>ODISHA</item>
         <item>AP</item>
         <item>WEST BENGAL</item>
-    </string-array>
-    <string-array name="report_types">
-        <item>Day Report</item>
-        <item>Month Report</item>
     </string-array>
 
 </resources>

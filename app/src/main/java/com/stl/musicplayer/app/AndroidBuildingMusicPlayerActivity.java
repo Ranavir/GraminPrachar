@@ -140,7 +140,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	LinearLayout report_layout;
 	TextView tv_report_type ;
 	TextView tv_date;
-	Button btnChangeDate ;
+	Button btnRefresh ;
 	String mStDate ;
 	DatePickerDialog mDatePickerDialog ;
 	private Calendar calendar ;
@@ -276,7 +276,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		
 		/*Added by Ranvir Dt. 22-06-2016*/
 		/*************************************/
-		turnGPSOn();
+		//turnGPSOn();
 		swtichDataConnection(true, AndroidBuildingMusicPlayerActivity.this);
 		//System.out.println(TAG+"Ring volume before::"+audioManager.getStreamVolume(AudioManager.STREAM_RING));
 		if(audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
@@ -307,7 +307,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		report_layout = (LinearLayout)findViewById(R.id.report_layout);
 		tv_report_type = (TextView)findViewById(R.id.tv_report_type);
 		tv_date = (TextView)findViewById(R.id.tv_date);
-		btnChangeDate = (Button)findViewById(R.id.btnChangeDate);
+		btnRefresh = (Button)findViewById(R.id.btnRefresh);
 		tv_td2 = (TextView)findViewById(R.id.tv_td2);
 		tv_td3 = (TextView)findViewById(R.id.tv_td3);
 		tv_td4 = (TextView)findViewById(R.id.tv_td4);
@@ -328,13 +328,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 
 
-		btnChangeDate.setOnClickListener(new View.OnClickListener() {
+		btnRefresh.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				showDialog(DATE_DIALOG_ID);
-
+				//showDialog(DATE_DIALOG_ID);
+				showDailyReport(tv_date.getText().toString());
 			}
 
 		});
@@ -413,47 +413,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		System.out.println(TAG+"End showDailyReport");
 	}
 
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-			case DATE_DIALOG_ID:
-				// set date picker as current date
-				mDatePickerDialog = new DatePickerDialog(this, datePickerListener,
-						year, month-1,day);
 
-				try {
-					mDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mStDate).getTime());
-					mDatePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				return mDatePickerDialog;
-		}
-		return null;
-	}
-	private DatePickerDialog.OnDateSetListener datePickerListener
-			= new DatePickerDialog.OnDateSetListener() {
-
-		// when dialog box is closed, below method will be called.
-		public void onDateSet(DatePicker view, int selectedYear,
-							  int selectedMonth, int selectedDay) {
-			year = selectedYear;
-			month = selectedMonth + 1 ;
-			day = selectedDay;
-
-			/********************************************************************
-			 1 - set date field value(date OR month) according to type
-			 2 - Call to reporting with proper reporting type and (date OR month)
-			 *********************************************************************/
-			//get the type of from the spinner
-			String choosenDate = new StringBuilder().append((day) <= 9 ? "0" + (day) : (day))
-					.append("-").append((month) <= 9 ? "0" + (month) : (month)).append("-").append(year).toString();
-			// set selected date into textview
-			tv_date.setText(choosenDate);//dd-mm-yyyy
-
-			showDailyReport(choosenDate);
-		}
-	};
 
 	Handler playlistHandler = new Handler();
 	Runnable playlistRunnable = new Runnable() {		 
@@ -566,7 +526,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		//Added Dt. 22062016 by Ranvir
 		audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 		audioManager.setStreamVolume(AudioManager.STREAM_RING, audioManager.getStreamMaxVolume(AudioManager.STREAM_RING), 0);
-		turnGPSOff();
+		//turnGPSOff();
+		gps.stopUsingGPS();
 		swtichDataConnection(false, getApplicationContext());
 		/*************************************************/
 	    
@@ -883,7 +844,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
         		startActivity(new Intent(getApplicationContext(), SettingOptions.class));
         		return false;
 			case R.id.action_dashboard:
-				//startActivity(new Intent(getApplicationContext(), SettingOptions.class));
+				startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
 				return false;
         	default:
         		return super.onOptionsItemSelected(item);

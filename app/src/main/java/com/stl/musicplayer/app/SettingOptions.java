@@ -20,7 +20,7 @@ import com.stl.musicplayer.R;
 
 
 public class SettingOptions extends Activity implements OnClickListener{
-	private static final String TAG = SettingOptions.class.getSimpleName()+": " ;
+	private static final String TAG = SettingOptions.class.getSimpleName();
 	Button send,downPlaylist,downMedia,changeUrl;
 	//EditText mrIdTxt;
 	//View customerLayout;

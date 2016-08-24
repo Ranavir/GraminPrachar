@@ -594,7 +594,7 @@ public class Utils {
 		
 		String externalStorage = System.getenv("EXTERNAL_STORAGE");
 		String secondaryStorage = System.getenv("SECONDARY_STORAGE"); 
-		System.out.println(TAG+"=================================: externalStorage" + externalStorage + "    secondaryStorage: " + secondaryStorage);
+		System.out.println(TAG + "=================================: externalStorage" + externalStorage + "    secondaryStorage: " + secondaryStorage);
 		
 				
 	    File f = new File(DirectoryPath);
@@ -1079,4 +1079,64 @@ public class Utils {
 		}
 		return line;
 	}//end of getVehicleDetails
+	/********************************************************
+	 * This method gets the daily report and update in ui
+	 * @param date
+	 * @date 19082016
+	 **********************************************************/
+	public static JSONObject getDailyReport(Context context,String date) {
+		String line = "";
+		JSONObject jsonResp = null ;
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		if(checkiInternet(context)){
+			try {
+
+				ArrayList<NameValuePair> namevaluepair = new ArrayList<NameValuePair>();
+				namevaluepair.add(new BasicNameValuePair("reqId","105"));
+				namevaluepair.add(new BasicNameValuePair("imei_no",getImeiNo(context)));
+				namevaluepair.add(new BasicNameValuePair("date",date));
+
+				int timeoutConnection = 20000;
+
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpParams httpParameters = httpClient.getParams();
+				//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+
+				HttpConnectionParams.setConnectionTimeout(httpParameters, REGISTRATION_TIMEOUT);
+				HttpConnectionParams.setSoTimeout(httpParameters, WAIT_TIMEOUT);
+				ConnManagerParams.setTimeout(httpParameters, WAIT_TIMEOUT);
+
+
+
+
+				HttpPost httpPost = new HttpPost(SERVER_URL);
+				httpPost.setEntity(new UrlEncodedFormEntity(namevaluepair));
+				HttpResponse response = httpClient.execute(httpPost);
+
+				StatusLine statusLine = response.getStatusLine();
+				if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+					BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					String s = "" ;
+					//line may be{NODATA/FAILED/(DATA)}
+					while ((s = br.readLine()) != null){
+						line += s ;
+					}
+					if (line.equals("FAILED")) {
+						System.out.println("========" + line);
+					} else {
+						jsonResp = new JSONObject(line);
+					}
+
+				}
+
+			} catch (Exception e) {
+				//msg="Unable to connect to the server.";
+				e.printStackTrace();
+			}
+		}
+		return jsonResp;
+	}//end of getDailyReport
 }//end of class

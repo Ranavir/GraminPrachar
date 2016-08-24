@@ -75,7 +75,8 @@
         <activity android:name="com.stl.musicplayer.app.ChangeUrlActivity" />
         <activity
             android:name="com.stl.musicplayer.app.RegistrationActivity"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@android:style/Theme" />
+ <!-- android:theme="@android:style/Theme.NoTitleBar" -->
 
         <service
             android:name="com.stl.musicplayer.app.MyWebService"
@@ -105,6 +106,8 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name="com.stl.musicplayer.app.DashboardActivity" />
     </application>
 
 </manifest> <!-- AndroidBuildingMusicPlayerActivity -->

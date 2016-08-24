@@ -1,6 +1,8 @@
 package com.stl.musicplayer.app;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,9 +11,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +41,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
+@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+@SuppressLint({ "NewApi", "Wakelock" })
 public class RegistrationActivity extends Activity implements OnClickListener,AdapterView.OnItemSelectedListener {
 	private static final String TAG = "RegistrationActivity : ";
 	Button btn_save, btn_exit;
@@ -64,11 +75,30 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	public static final String TAG_VEHICLE_NM = "vehicle_name";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		System.out.println(TAG + "### onCreate()");
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+
+		//ActionBar actionBar = getActionBar();
+		//actionBar.setDisplayShowTitleEnabled(false);
+		//actionBar.setDisplayShowHomeEnabled(false);
+		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setContentView(R.layout.activity_regd);
+
+
 		mContext = this ;
+		initUI();
 		dbutil = new DatabaseUtil(RegistrationActivity.this);
+
+
+	}//end oncreate
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		System.out.println(TAG + "### onResume()");
 		//check for the registration details in local database
 		jsonObjRegDetails = dbutil.getRegdDetails();
 
@@ -96,9 +126,48 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 			}
 		} //else {//if totally absent in local db run below code
 		System.out.println(TAG + "No registration details available in local db...");
-		initUI();
+
 		/****************************** Validate user id availability *******************************/
 
+
+
+		//}//end of else
+	}//end onResume
+
+	/**
+	 * UI initialization method
+	 */
+	private void initUI() {
+		System.out.println(TAG+" ENTRY----> initUI");
+		//et_state,et_busname,et_bus_regno,et_sit_capacity,et_bus_st,et_bus_et,et_owner_nm,et_owner_cn,et_agent_nm,et_agent_cn
+		//et_state = (EditText)findViewById(R.id.et_state);
+		sp_state = (Spinner) findViewById(R.id.sp_state);
+
+		sp_owner_nm = (Spinner) findViewById(R.id.sp_owner_nm);
+		et_owner_cn = (EditText) findViewById(R.id.et_owner_cn);
+		sp_bus_regno = (Spinner) findViewById(R.id.sp_bus_regno);
+		et_busname = (EditText) findViewById(R.id.et_busname);
+
+		et_sit_capacity = (EditText) findViewById(R.id.et_sit_capacity);
+		et_bus_st = (EditText) findViewById(R.id.et_bus_st);
+		et_bus_et = (EditText) findViewById(R.id.et_bus_et);
+
+		et_agent_id = (EditText) findViewById(R.id.et_agent_id);
+		et_agent_nm = (EditText) findViewById(R.id.et_agent_nm);
+		et_agent_cn = (EditText) findViewById(R.id.et_agent_cn);
+
+		sp_state.setOnItemSelectedListener(this);
+		sp_owner_nm.setOnItemSelectedListener(this);
+		sp_bus_regno.setOnItemSelectedListener(this);
+
+		btn_save = (Button) findViewById(R.id.btn_save);
+		btn_save.setOnClickListener(this);
+
+		btn_exit = (Button) findViewById(R.id.btn_exit);
+		btn_exit.setOnClickListener(this);
+		//bstate,bbusname,bbusregno,bsitcapacity,bbusst,bbuset,bownernm,bownercn,bagentnm,bagentcn
+		bsitcapacity = bst = bet = bagentid = bagentnm = bagentcn = false;
+		imei_no = Utils.getImeiNo(getApplicationContext());//get imei no
 
 		et_sit_capacity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -137,7 +206,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 								@Override
 								public void onTimeSet(TimePicker view, int hourOfDay,
 													  int minute) {
-									et_bus_st.setText((hourOfDay<=9 ? "0"+hourOfDay : hourOfDay) + ":" + (minute<=9 ? "0"+minute : minute));
+									et_bus_st.setText((hourOfDay <= 9 ? "0" + hourOfDay : hourOfDay) + ":" + (minute <= 9 ? "0" + minute : minute));
 								}
 							}, mHour, mMinute, false).show();
 				} else {
@@ -247,43 +316,6 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 				}
 			}
 		});
-		//}//end of else
-	}//end oncreate
-
-	/**
-	 * UI initialization method
-	 */
-	private void initUI() {
-		System.out.println(TAG+" ENTRY----> initUI");
-		//et_state,et_busname,et_bus_regno,et_sit_capacity,et_bus_st,et_bus_et,et_owner_nm,et_owner_cn,et_agent_nm,et_agent_cn
-		//et_state = (EditText)findViewById(R.id.et_state);
-		sp_state = (Spinner) findViewById(R.id.sp_state);
-
-		sp_owner_nm = (Spinner) findViewById(R.id.sp_owner_nm);
-		et_owner_cn = (EditText) findViewById(R.id.et_owner_cn);
-		sp_bus_regno = (Spinner) findViewById(R.id.sp_bus_regno);
-		et_busname = (EditText) findViewById(R.id.et_busname);
-
-		et_sit_capacity = (EditText) findViewById(R.id.et_sit_capacity);
-		et_bus_st = (EditText) findViewById(R.id.et_bus_st);
-		et_bus_et = (EditText) findViewById(R.id.et_bus_et);
-
-		et_agent_id = (EditText) findViewById(R.id.et_agent_id);
-		et_agent_nm = (EditText) findViewById(R.id.et_agent_nm);
-		et_agent_cn = (EditText) findViewById(R.id.et_agent_cn);
-
-		sp_state.setOnItemSelectedListener(this);
-		sp_owner_nm.setOnItemSelectedListener(this);
-		sp_bus_regno.setOnItemSelectedListener(this);
-
-		btn_save = (Button) findViewById(R.id.btn_save);
-		btn_save.setOnClickListener(this);
-
-		btn_exit = (Button) findViewById(R.id.btn_exit);
-		btn_exit.setOnClickListener(this);
-		//bstate,bbusname,bbusregno,bsitcapacity,bbusst,bbuset,bownernm,bownercn,bagentnm,bagentcn
-		bsitcapacity = bst = bet = bagentid = bagentnm = bagentcn = false;
-		imei_no = Utils.getImeiNo(getApplicationContext());//get imei no
 		System.out.println(TAG+" EXIT----> initUI");
 	}//end initUI
 
@@ -829,5 +861,27 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 
+	}
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.url_setting_menu, menu);
+		/*for(int i = 0; i < menu.size(); i++) {
+			MenuItem item = menu.getItem(i);
+			SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
+			int end = spanString.length();
+			spanString.setSpan(new RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			item.setTitle(spanString);
+		}*/
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+			case R.id.action_settings:
+				startActivity(new Intent(getApplicationContext(),ChangeUrlActivity.class));
+				return false;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 }

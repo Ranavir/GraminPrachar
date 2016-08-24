@@ -7,7 +7,8 @@
 
     <include
         android:id="@+id/logoLayout"
-        layout="@layout/header" />
+        layout="@layout/header"
+        />
 
     <!-- Body -->
 
@@ -17,8 +18,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/foot"
         android:layout_below="@+id/logoLayout"
-        android:layout_margin="@dimen/layout_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"

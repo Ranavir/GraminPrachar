@@ -226,13 +226,29 @@
                 android:layout_weight="1"
                 android:textColor="@color/colorBlue"
                 android:textStyle="bold"/>
-
             <Button
+                android:id="@+id/btnRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Refresh"
+                android:layout_weight="1"
+                />
+
+
+            <!--<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_popup_sync_1"
+                android:scaleType="fitStart"
+                android:layout_gravity="bottom"
+                />-->
+            <!--<Button
                 android:id="@+id/btnChangeDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Change\nDate"
-                android:layout_weight="1"/>
+                android:layout_weight="1"/>-->
+
         </LinearLayout>
 
             <!--<ScrollView
@@ -260,7 +276,7 @@
 
                     >
                     <TableLayout
-                        android:id="@+id/tabla_report"
+                        android:id="@+id/table_report"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:measureWithLargestChild="false"

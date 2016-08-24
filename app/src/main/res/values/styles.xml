@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--<style name="ThemeRegister" parent="android:Theme.NoTitleBar">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:actionMenuTextAppearance">@style/CustomMenuItem</item>
+    </style>
+    <style name="CustomMenuItem" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+    </style>-->
+</resources>

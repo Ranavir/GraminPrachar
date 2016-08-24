@@ -149,7 +149,7 @@ public class DatabaseUtil {
 				db.execSQL("create table if not exists host_detail(ip_address text, port_no text)");
 				//db.execSQL("insert or replace into host_detail(ip_address, port_no) values('208.109.208.91','80')");
 				//db.execSQL("insert or replace into host_detail(ip_address, port_no) values('192.168.0.124','8080')");
-				db.execSQL("insert or replace into host_detail(ip_address, port_no) values('192.168.0.23','8080')");
+				db.execSQL("insert or replace into host_detail(ip_address, port_no) values('182.156.93.61','8080')");
 				
 				String query = String.format("insert or replace into play_song_index(id, play_date, song_index) values('1','%s','0')", Utils.getDate("yyyy-MM-dd"));
 				db.execSQL(query);

@@ -480,9 +480,13 @@ public class DatabaseUtil {
 						set = timeFormat.format(format.parse(c.getString(c.getColumnIndex("end_time"))));//update each time
 						//System.out.println(TAG + "set::" + set);
 						//stt = ?
-						String startTime = c.getString(c.getColumnIndex("start_time")) ;
-						String endTime = c.getString(c.getColumnIndex("end_time")) ;
-						stt += format.parse(endTime).getTime() - format.parse(startTime).getTime();
+						String startTime = c.getString(c.getColumnIndex("start_time")) != null ? c.getString(c.getColumnIndex("start_time")) : "" ;
+						String endTime = c.getString(c.getColumnIndex("end_time")) != null ? c.getString(c.getColumnIndex("end_time")) : "" ;
+						//System.out.println(TAG+" startTime :: "+startTime + " endTime :: "+endTime);
+						if(startTime != "" && endTime != ""){
+							stt += format.parse(endTime).getTime() - format.parse(startTime).getTime();
+						}
+						//System.out.println(TAG+"stt :: "+stt);
 					}
 
 				}while(c.moveToNext());
@@ -496,7 +500,7 @@ public class DatabaseUtil {
 			if (c1.moveToFirst()) {
 
 				//do{
-					spc = c1.getInt(0);
+				spc = c1.getInt(0);
 				System.out.println(TAG+"spc::"+spc);
 				//}while(c1.moveToNext());
 

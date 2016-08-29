@@ -204,6 +204,10 @@ public class DashboardActivity extends Activity {
         }
     };
 
+    /**
+     * This method used to show daily report of songs and adds
+     * from server side
+     */
     public void showDailyReport() {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             String date = tv_date.getText().toString() ;
@@ -218,19 +222,28 @@ public class DashboardActivity extends Activity {
                 pd.setCancelable(false);
                 pd.setIndeterminate(true);
                 pd.show();
+                tv_td2.setText(NO_VAL);
+                tv_td3.setText(NO_VAL);
+                tv_td4.setText(NO_VAL);
+                tv_td5.setText(NO_VAL);
+
+                tv_td7.setText(NO_VAL);
+                tv_td8.setText(NO_VAL);
+                tv_td9.setText(NO_VAL);
+                tv_td10.setText(NO_VAL);
             }
 
             @Override
             protected Void doInBackground(Void... arg0) {
                 try {
-                        if(Utils.checkiInternet(getApplicationContext())){
-                            TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-                            mngr.getDeviceId();
-                            String UID = mngr.getDeviceId();
-                            obj = Utils.getDailyReport(getApplicationContext(),date);
-                        }else{
-                            System.out.println(TAG+"1. Internet Connection Not Present");
-                        }
+                    if(Utils.checkiInternet(getApplicationContext())){
+                        TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                        mngr.getDeviceId();
+                        String UID = mngr.getDeviceId();
+                        obj = Utils.getDailyReport(getApplicationContext(),date);
+                    }else{
+                        System.out.println(TAG+"1. Internet Connection Not Present");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -256,26 +269,16 @@ public class DashboardActivity extends Activity {
                         tv_td8.setText(obj.get("add_start_time").toString());
                         tv_td9.setText(obj.get("add_end_time").toString());
                         tv_td10.setText(obj.get("add_pause_count").toString());
-                    }else{
-                        //Toast.makeText(getApplicationContext(), "No Data found", Toast.LENGTH_LONG).show();
-                        tv_td2.setText(NO_VAL);
-                        tv_td3.setText(NO_VAL);
-                        tv_td4.setText(NO_VAL);
-                        tv_td5.setText(NO_VAL);
-
-                        tv_td7.setText(NO_VAL);
-                        tv_td8.setText(NO_VAL);
-                        tv_td9.setText(NO_VAL);
-                        tv_td10.setText(NO_VAL);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+
                 }
 
             }
         };
         task.execute();
-    }
+    }//end of showDailyReport
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.close_menu, menu);

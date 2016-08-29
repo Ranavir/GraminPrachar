@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/logoLayout"
-        layout="@layout/header"
+        layout="@layout/regd_header"
         />
 
     <!-- Body -->
@@ -251,7 +251,8 @@
                     android:ems="10"
                     android:singleLine="true"
                     android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
+                    android:textColor="@color/txtcolor"
+                    android:inputType="number"/>
             </LinearLayout>
 
             <LinearLayout
@@ -347,7 +348,8 @@
                     android:ems="10"
                     android:singleLine="true"
                     android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
+                    android:textColor="@color/txtcolor"
+                    android:inputType="textCapCharacters"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -377,7 +379,8 @@
                     android:ems="10"
                     android:singleLine="true"
                     android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
+                    android:textColor="@color/txtcolor"
+                    android:inputType="textCapCharacters"/>
             </LinearLayout>
 
             <LinearLayout
@@ -408,7 +411,8 @@
                     android:ems="10"
                     android:singleLine="true"
                     android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/txtcolor"/>
+                    android:textColor="@color/txtcolor"
+                    android:inputType="number"/>
             </LinearLayout>
 
             <LinearLayout

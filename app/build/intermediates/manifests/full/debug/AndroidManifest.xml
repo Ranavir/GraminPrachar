@@ -75,8 +75,8 @@
         <activity android:name="com.stl.musicplayer.app.ChangeUrlActivity" />
         <activity
             android:name="com.stl.musicplayer.app.RegistrationActivity"
-            android:theme="@android:style/Theme" />
- <!-- android:theme="@android:style/Theme.NoTitleBar" -->
+            android:theme="@android:style/Theme.NoTitleBar" />
+ <!--  -->
 
         <service
             android:name="com.stl.musicplayer.app.MyWebService"

@@ -13,8 +13,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +47,7 @@ import java.util.Calendar;
 @SuppressLint({ "NewApi", "Wakelock" })
 public class RegistrationActivity extends Activity implements OnClickListener,AdapterView.OnItemSelectedListener {
 	private static final String TAG = "RegistrationActivity : ";
-	Button btn_save, btn_exit;
+	Button btn_save, btn_exit,btn_change_URL;
 	ProgressDialog pd;
 	TextView urlTv;
 	Spinner sp_state,sp_owner_nm,sp_bus_regno;
@@ -78,15 +80,14 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		System.out.println(TAG + "### onCreate()");
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
 
 		//ActionBar actionBar = getActionBar();
 		//actionBar.setDisplayShowTitleEnabled(false);
 		//actionBar.setDisplayShowHomeEnabled(false);
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+		/*this.requestWindowFeature(Window.FEATURE_ACTION_BAR);*/
 		setContentView(R.layout.activity_regd);
-
 
 		mContext = this ;
 		initUI();
@@ -165,10 +166,35 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 
 		btn_exit = (Button) findViewById(R.id.btn_exit);
 		btn_exit.setOnClickListener(this);
+
+		btn_change_URL = (Button) findViewById(R.id.btn_change_URL);
+		btn_change_URL.setOnClickListener(this);
 		//bstate,bbusname,bbusregno,bsitcapacity,bbusst,bbuset,bownernm,bownercn,bagentnm,bagentcn
 		bsitcapacity = bst = bet = bagentid = bagentnm = bagentcn = false;
-		imei_no = Utils.getImeiNo(getApplicationContext());//get imei no
+		imei_no = Utils.getImeiNo(mContext);//get imei no
 
+		et_agent_id.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+										  int arg3) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				String s = arg0.toString();
+				if (!s.equals(s.toUpperCase())) {
+					s = s.toUpperCase();
+					et_agent_id.setText(s);
+					et_agent_id.setSelection(s.length());
+				}
+			}
+		});
 		et_sit_capacity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
 			@Override
@@ -330,7 +356,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 					//Toast.makeText(getBaseContext(),"All fields valid...",Toast.LENGTH_SHORT).show();
 
 
-					if (Utils.checkiInternet(getApplicationContext())) {
+					if (Utils.checkiInternet(mContext)) {
 						//save in local db and send to server for getting status
 						saveRegdDetails();
 
@@ -348,6 +374,9 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 				break;
 			case R.id.btn_exit:
 				finish();
+				break;
+			case R.id.btn_change_URL:
+				startActivity(new Intent(mContext, ChangeUrlActivity.class));
 				break;
 			default:
 				break;
@@ -463,7 +492,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 						//System.out.println(TAG+"jboj---------->"+jboj);
 						//get the jsonarray from the key data
 						JSONArray jaDistributorData  = jboj.getJSONArray("data");
-						if(jaDistributorData.length() > 0){
+						if (jaDistributorData.length() > 0){
 							getDistributors(jaDistributorData);
 							//populate the spinner with key value
 							ArrayAdapter<DistributorModel> adapter =
@@ -862,16 +891,10 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	public void onNothingSelected(AdapterView<?> arg0) {
 
 	}
-	public boolean onCreateOptionsMenu(Menu menu) {
+	/*public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.url_setting_menu, menu);
-		/*for(int i = 0; i < menu.size(); i++) {
-			MenuItem item = menu.getItem(i);
-			SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
-			int end = spanString.length();
-			spanString.setSpan(new RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			item.setTitle(spanString);
-		}*/
+
 		return true;
 	}
 
@@ -883,5 +906,5 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
+	}*/
 }

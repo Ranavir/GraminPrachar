@@ -9,18 +9,38 @@
        
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:weightSum="5"
-        android:gravity="center_horizontal"
-        >
+        android:weightSum="3">
 
-  <!--        android:background="#259eff" -->
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/app_logo"
-            android:scaleType="fitCenter"/>
-       
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:orientation="horizontal"
+            android:layout_weight="2.5">
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/app_logo"
+                android:scaleType="fitCenter"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:layout_margin="2dp">
+            <Button
+                android:id="@+id/btn_change_URL"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/btn_height_small"
+                android:text="Change Server"
+                android:textSize="8sp"
+                android:textStyle="normal|bold"
+                android:padding="0dip"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>    
 

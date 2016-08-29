@@ -75,7 +75,7 @@
         <activity android:name=".app.SettingOptions" />
         <activity android:name=".app.ChangeUrlActivity" />
         <activity android:name=".app.RegistrationActivity"
-                  android:theme="@android:style/Theme"/> <!--android:theme="@android:style/Theme.NoTitleBar"-->
+                  android:theme="@android:style/Theme.NoTitleBar"/> <!---->
 
 
         <service

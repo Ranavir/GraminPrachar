@@ -144,9 +144,9 @@ ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:76:9-59
 	android:name
 		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:76:19-56
 activity#com.stl.musicplayer.app.RegistrationActivity
-ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:77:9-78:57
+ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:77:9-78:68
 	android:theme
-		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:78:19-55
+		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:78:19-66
 	android:name
 		ADDED from D:\AndroidDev\GraminPrachar\app\src\main\AndroidManifest.xml:77:19-59
 service#com.stl.musicplayer.app.MyWebService

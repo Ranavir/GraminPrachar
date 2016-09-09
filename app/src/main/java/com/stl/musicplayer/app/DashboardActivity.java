@@ -58,7 +58,7 @@ public class DashboardActivity extends Activity {
     private boolean sp_flag = false ;
     ArrayList<ReportModel> mReportModels;
     DatabaseUtil mDatabaseUtil = null;
-    TextView tv_td2,tv_td3,tv_td4,tv_td5,tv_td7,tv_td8,tv_td9,tv_td10;
+    TextView tv_td2,tv_td3,tv_td4,tv_td5,tv_td7,tv_td8,tv_td9,tv_td10,tv_td41,tv_td91;
     SimpleDateFormat sdf ;
     ProgressDialog pd;
     @Override
@@ -100,6 +100,8 @@ public class DashboardActivity extends Activity {
         tv_td8 = (TextView)findViewById(R.id.tv_td8);
         tv_td9 = (TextView)findViewById(R.id.tv_td9);
         tv_td10 = (TextView)findViewById(R.id.tv_td10);
+        tv_td41 = (TextView)findViewById(R.id.tv_td41);
+        tv_td91 = (TextView)findViewById(R.id.tv_td91);
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -124,7 +126,7 @@ public class DashboardActivity extends Activity {
         });
     }//end onCreate
 
-    private void showDailyReport(String date) {
+    /*private void showDailyReport(String date) {
         System.out.println(TAG+"Begin showDailyReport");
         System.out.println(TAG+"date = "+date);
         JSONObject obj = null ;
@@ -133,21 +135,23 @@ public class DashboardActivity extends Activity {
 
             //call to reporting accordingly
             //Toast.makeText(getApplicationContext(),"Show day wise report....",Toast.LENGTH_SHORT).show();
-            /****************************************************/
+            *//****************************************************//*
             obj = mDatabaseUtil.getDailyReports(date);
             //Toast.makeText(getApplicationContext(),"obj::"+obj,Toast.LENGTH_SHORT).show();
 
-            /****************************************************/
+            *//****************************************************//*
 
             tv_td2.setText(obj.get("song_total_time").toString());
             tv_td3.setText(obj.get("song_start_time").toString());
             tv_td4.setText(obj.get("song_end_time").toString());
             tv_td5.setText(obj.get("song_pause_count").toString());
+            tv_td41.setText(obj.get("song_count").toString());
 
             tv_td7.setText(obj.get("add_total_time").toString());
             tv_td8.setText(obj.get("add_start_time").toString());
             tv_td9.setText(obj.get("add_end_time").toString());
             tv_td10.setText(obj.get("add_pause_count").toString());
+            tv_td91.setText(obj.get("add_count").toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }catch (Exception e) {
@@ -159,7 +163,7 @@ public class DashboardActivity extends Activity {
         }
 
         System.out.println(TAG+"End showDailyReport");
-    }
+    }*/
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -225,12 +229,14 @@ public class DashboardActivity extends Activity {
                 tv_td2.setText(NO_VAL);
                 tv_td3.setText(NO_VAL);
                 tv_td4.setText(NO_VAL);
-                tv_td5.setText(NO_VAL);
+                tv_td5.setText("0");
+                tv_td41.setText("0");
 
                 tv_td7.setText(NO_VAL);
                 tv_td8.setText(NO_VAL);
                 tv_td9.setText(NO_VAL);
-                tv_td10.setText(NO_VAL);
+                tv_td10.setText("0");
+                tv_td91.setText("0");
             }
 
             @Override
@@ -264,11 +270,13 @@ public class DashboardActivity extends Activity {
                         tv_td3.setText(obj.get("song_start_time").toString());
                         tv_td4.setText(obj.get("song_end_time").toString());
                         tv_td5.setText(obj.get("song_pause_count").toString());
+                        tv_td41.setText(obj.get("song_count").toString());
 
                         tv_td7.setText(obj.get("add_total_time").toString());
                         tv_td8.setText(obj.get("add_start_time").toString());
                         tv_td9.setText(obj.get("add_end_time").toString());
                         tv_td10.setText(obj.get("add_pause_count").toString());
+                        tv_td91.setText(obj.get("add_count").toString());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

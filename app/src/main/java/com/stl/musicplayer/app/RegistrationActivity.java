@@ -43,29 +43,33 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint({ "NewApi", "Wakelock" })
 public class RegistrationActivity extends Activity implements OnClickListener,AdapterView.OnItemSelectedListener {
 	private static final String TAG = "RegistrationActivity : ";
-	Button btn_save, btn_exit,btn_change_URL;
+	Button btn_save,btn_exit,btn_change_URL;
 	ProgressDialog pd;
-	TextView urlTv;
+
 	Spinner sp_state,sp_owner_nm,sp_bus_regno;
 	DatabaseUtil dbutil;
-	EditText et_owner_cn,et_busname, et_sit_capacity, et_bus_st, et_bus_et,et_agent_id, et_agent_nm, et_agent_cn;
-	String imei_no, state,own_code,own_nm,own_cn,bus_name,bus_reg_no, sit_cap, bus_st, bus_et,agent_id,agent_nm, agent_cn;
+	EditText et_owner_cn,et_busname, et_sit_capacity, et_bus_st, et_bus_et,et_agent_id ;
+	String imei_no, state,own_code,own_nm,own_cn,bus_name,bus_reg_no, sit_cap, bus_st, bus_et,agent_id ;
 
 	String mTitle, mMsg;
-	boolean  bsitcapacity, bst, bet,bagentid, bagentnm, bagentcn;
 	JSONObject jsonObjRegDetails;
 	String status = "";
 	String serverACK = "";
 
+	String mStrStates = "" ;
 	String mStrDistributorDetails = "" ;
 	String mStrVehicleDetails = "" ;
 
-	ArrayList<DistributorModel> mDistributorModels = null ;
-	ArrayList<VehicleModel> mVehicleModels = null ;
+	List<String> mStateList = null ;
+	List<DistributorModel> mDistributorModels = null ;
+	List<VehicleModel> mVehicleModels = null ;
+	public static boolean bIPPingStatus = false ;//Can access
 	long regId;
 	Context mContext ;
 	Intent mIntent ;
@@ -75,6 +79,9 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	public static final String TAG_DISTRIBUTOR_ID = "distributor_code";
 	public static final String TAG_VEHICLE_RN = "vehicle_no";
 	public static final String TAG_VEHICLE_NM = "vehicle_name";
+	public static final String TAG_SEAT_CAP = "sitting_capacity";
+	public static final String TAG_ST = "start_time";
+	public static final String TAG_ET = "end_time";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println(TAG + "### onCreate()");
@@ -92,14 +99,15 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		mContext = this ;
 		initUI();
 		dbutil = new DatabaseUtil(RegistrationActivity.this);
-
-
+		System.out.println(TAG+"bIPPingStatus::"+bIPPingStatus);
 	}//end oncreate
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		System.out.println(TAG + "### onResume()");
+
+
 		//check for the registration details in local database
 		jsonObjRegDetails = dbutil.getRegdDetails();
 
@@ -125,15 +133,22 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 				startActivity(mIntent);
 				finish();
 			}
-		} //else {//if totally absent in local db run below code
+		}//end if
 		System.out.println(TAG + "No registration details available in local db...");
 
 		/****************************** Validate user id availability *******************************/
-
-
-
-		//}//end of else
+		//Get states list and reinitialize the page after IPChange or in case of any error in fetching state list
+		if(!bIPPingStatus) {//Error fetching server data previously so try to start from begining
+			getStates();
+		}
 	}//end onResume
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println(TAG + "### onDestroy()");
+		bIPPingStatus = false ;
+	}
 
 	/**
 	 * UI initialization method
@@ -154,8 +169,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		et_bus_et = (EditText) findViewById(R.id.et_bus_et);
 
 		et_agent_id = (EditText) findViewById(R.id.et_agent_id);
-		et_agent_nm = (EditText) findViewById(R.id.et_agent_nm);
-		et_agent_cn = (EditText) findViewById(R.id.et_agent_cn);
+
 
 		sp_state.setOnItemSelectedListener(this);
 		sp_owner_nm.setOnItemSelectedListener(this);
@@ -170,7 +184,6 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		btn_change_URL = (Button) findViewById(R.id.btn_change_URL);
 		btn_change_URL.setOnClickListener(this);
 		//bstate,bbusname,bbusregno,bsitcapacity,bbusst,bbuset,bownernm,bownercn,bagentnm,bagentcn
-		bsitcapacity = bst = bet = bagentid = bagentnm = bagentcn = false;
 		imei_no = Utils.getImeiNo(mContext);//get imei no
 
 		et_agent_id.addTextChangedListener(new TextWatcher() {
@@ -195,153 +208,8 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 				}
 			}
 		});
-		et_sit_capacity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
 
-				if (hasFocus) {
-					// do nothing
-				} else {
-					String str = et_sit_capacity.getText().toString().trim();
-					if (!str.matches("[1-9][0-9][0-9]?")) {
-						et_sit_capacity.setError("Invalid Sitting Capacity...");
-						et_sit_capacity.setText("");
-						bsitcapacity = false;
-					} else {
-						bsitcapacity = true;
-						sit_cap = str;
-					}
-				}
-			}
-		});
-		et_bus_st.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-
-				if (hasFocus) {
-					// do nothing
-					// Process to get Current Time
-					final Calendar c = Calendar.getInstance();
-					int mHour = c.get(Calendar.HOUR_OF_DAY);
-					int mMinute = c.get(Calendar.MINUTE);
-					new TimePickerDialog(RegistrationActivity.this,
-							new TimePickerDialog.OnTimeSetListener() {
-
-								@Override
-								public void onTimeSet(TimePicker view, int hourOfDay,
-													  int minute) {
-									et_bus_st.setText((hourOfDay <= 9 ? "0" + hourOfDay : hourOfDay) + ":" + (minute <= 9 ? "0" + minute : minute));
-								}
-							}, mHour, mMinute, false).show();
-				} else {
-					String str = et_bus_st.getText().toString();
-					if (!str.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")) {
-						et_bus_st.setError("Invalid Time...");
-						et_bus_st.setText("");
-						bst = false;
-					} else {
-						bst = true;
-						bus_st = str;
-					}
-				}
-			}
-		});
-		et_bus_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-
-				if (hasFocus) {
-					// do nothing
-					// Process to get Current Time
-					final Calendar c = Calendar.getInstance();
-					int mHour = c.get(Calendar.HOUR_OF_DAY);
-					int mMinute = c.get(Calendar.MINUTE);
-					new TimePickerDialog(RegistrationActivity.this,
-							new TimePickerDialog.OnTimeSetListener() {
-
-								@Override
-								public void onTimeSet(TimePicker view, int hourOfDay,
-													  int minute) {
-									et_bus_et.setText((hourOfDay<=9 ? "0"+hourOfDay : hourOfDay) + ":" + (minute<=9 ? "0"+minute : minute));
-								}
-							}, mHour, mMinute, false).show();
-				} else {
-					String str = et_bus_et.getText().toString();
-					if (!str.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")) {
-						et_bus_et.setError("Invalid Time...");
-						et_bus_et.setText("");
-						bet = false;
-					} else {
-						bet = true;
-						bus_et = str;
-					}
-				}
-			}
-		});
-		et_agent_id.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-
-				if (hasFocus) {
-					// do nothing
-				} else {
-					String str = et_agent_id.getText().toString().trim();
-					if (!str.matches("[A-Za-z]{2}[a-zA-Z0-9\\s]*")) {
-						et_agent_id.setError("Invalid Id...");
-						et_agent_id.setText("");
-						bagentid = false;
-					} else {
-						bagentid = true;
-						agent_id = str;
-					}
-				}
-			}
-		});
-		et_agent_nm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-
-				if (hasFocus) {
-					// do nothing
-				} else {
-					String str = et_agent_nm.getText().toString().trim();
-					if (!str.matches("[A-Za-z][a-zA-Z\\s]*")) {
-						et_agent_nm.setError("Invalid Name...");
-						et_agent_nm.setText("");
-						bagentnm = false;
-					} else {
-						bagentnm = true;
-						agent_nm = str;
-					}
-				}
-			}
-		});
-
-		et_agent_cn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-
-				if (hasFocus) {
-					// do nothing
-				} else {
-					String str = et_agent_cn.getText().toString().trim();
-					if (!str.matches("(0|91)?[7-9][0-9]{9}")) {
-						et_agent_cn.setError("Invalid Mobile no...");
-						et_agent_cn.setText("");
-						bagentcn = false;
-					} else {
-						bagentcn = true;
-						agent_cn = str;
-					}
-				}
-			}
-		});
 		System.out.println(TAG+" EXIT----> initUI");
 	}//end initUI
 
@@ -351,24 +219,18 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.btn_save:
-				et_agent_cn.clearFocus();
-				if (validateFields()) {
-					//Toast.makeText(getBaseContext(),"All fields valid...",Toast.LENGTH_SHORT).show();
-
-
-					if (Utils.checkiInternet(mContext)) {
-						//save in local db and send to server for getting status
+				et_agent_id.clearFocus();
+				//Toast.makeText(getBaseContext(),"All fields valid...",Toast.LENGTH_SHORT).show();
+				if (Utils.checkiInternet(mContext)) {
+					//save in local db and send to server for getting status
+					if (validateFields()) {
 						saveRegdDetails();
-
-					} else {
-						//give voice message of toast
-						mTitle = "Message";
-						mMsg = "Internet connectivity unavailable!!!";
-						showErrorAlert(mTitle, mMsg);
 					}
+
 				} else {
-					mTitle = "Alert";
-					mMsg = "Fields cannot be left blank!!!";
+					//give voice message of toast
+					mTitle = "Message";
+					mMsg = "Internet connectivity unavailable!!!";
 					showErrorAlert(mTitle, mMsg);
 				}
 				break;
@@ -389,7 +251,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	 */
 	private void saveRegdDetails() {
 		System.out.println(TAG + " ENTRY----> saveRegdDetails");
-		jsonObjRegDetails = new JSONObject();
+		jsonObjRegDetails = new JSONObject();//initialize with data
 		try {
 			//String imei_no,state,bus_name,bus_reg_no,sit_cap,bus_st,bus_et,own_nm,own_cn,agent_nm,agent_cn ;
 			jsonObjRegDetails.put("imei_no", imei_no);
@@ -404,17 +266,181 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 			jsonObjRegDetails.put("bus_st", bus_st);
 			jsonObjRegDetails.put("bus_et", bus_et);
 			jsonObjRegDetails.put("agent_id", agent_id.trim().toUpperCase());
-			jsonObjRegDetails.put("agent_nm", agent_nm.trim().toUpperCase());
-			jsonObjRegDetails.put("agent_cn", agent_cn);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 		//send to server for ack and put in serverACK
-		getRegistrationAck(jsonObjRegDetails);
+		getRegistrationAck();
 		System.out.println(TAG + "serverACK : " + serverACK);
+
 		System.out.println(TAG + " EXIT----> saveRegdDetails");
 	}//end of saveRegdDetails
+	/**********************************************************
+	 * This method gets the states from server
+	 * and then populates the spinner element of state
+	 * @date 29082016
+	 **********************************************************/
+	private void getStates() {
+		System.out.println(TAG + " ENTRY----> getStates");
+
+
+		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected void onPreExecute() {
+
+			}
+
+			@Override
+			protected Void doInBackground(Void... arg0) {
+
+				try {
+					mStrStates = Utils.getStates(RegistrationActivity.this);
+
+					System.out.println(TAG+"Received Response=====> " + mStrStates);
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+
+				//if ack is not null then save the ack to local db as status
+				if ("FAILED".equals(mStrStates) || "".equals(mStrStates )) {
+					Toast.makeText(RegistrationActivity.this,"Error fetching State list.",Toast.LENGTH_SHORT).show();
+					//reinitialize dependent values
+					sp_state.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					sp_owner_nm.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					own_nm = "" ;
+					et_owner_cn.setText("");
+					own_cn = "" ;
+					own_code = "" ;
+					//do for vehicle also
+					sp_bus_regno.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					bus_reg_no = "" ;
+					et_busname.setText("");
+					bus_name = "" ;
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
+
+				}else if ("NODATA".equals(mStrStates)) {
+					mTitle = "Message";
+					mMsg = "Currently no States Registered\nContact your admin";
+					showErrorAlert(mTitle, mMsg);
+					//reinitialize dependent values
+					sp_state.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					sp_owner_nm.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					own_nm = "" ;
+					et_owner_cn.setText("");
+					own_cn = "" ;
+					own_code = "" ;
+					//do for vehicle also
+					sp_bus_regno.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+					bus_reg_no = "" ;
+					et_busname.setText("");
+					bus_name = "" ;
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
+
+				}else{
+					bIPPingStatus = true ;//Successfully get Server response
+					//populate distributor spinner
+					//convert response to jsonobject
+					try {
+						JSONObject jboj = new JSONObject(mStrStates);
+						//System.out.println(TAG+"jboj---------->"+jboj);
+						//get the jsonarray from the key data
+						JSONArray jaStates  = jboj.getJSONArray("data");
+						if (jaStates.length() > 0){
+							getStateList(jaStates);
+							//populate the spinner with key value
+							ArrayAdapter<String> adapter =
+									new ArrayAdapter<String>(
+											RegistrationActivity.this,
+											android.R.layout.simple_spinner_item,
+											mStateList);
+							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+							sp_state.setAdapter(adapter);
+
+							System.out.println(TAG+"spinner length----->"+sp_state.getChildCount());
+						}else{//no data available update the owner spinner
+							//reinitialize dependent values
+							sp_state.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+							sp_owner_nm.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+							own_nm = "" ;
+							et_owner_cn.setText("");
+							own_cn = "" ;
+							own_code = "" ;
+							//do for vehicle also
+							sp_bus_regno.setAdapter(new ArrayAdapter<String>(RegistrationActivity.this, android.R.layout.simple_spinner_item, new String[]{}));
+							bus_reg_no = "" ;
+							et_busname.setText("");
+							bus_name = "" ;
+							sit_cap = "" ;
+							et_sit_capacity.setText("");
+							bus_st = "" ;
+							et_bus_st.setText("HH:MM");
+							bus_et = "" ;
+							et_bus_et.setText("HH:MM");
+
+
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+
+
+
+				}
+
+			}
+		};
+		task.execute();
+		System.out.println(TAG + " EXIT----> getDistributorDetails");
+	}//end of getStates
+	/***************************************************************
+	 * This method populates the State arraylist from server
+	 * JSONArray response
+	 * @param j
+	 ****************************************************************/
+	private void getStateList(JSONArray j){
+		String methodname = "getStateList" ;
+		System.out.println(TAG + " ENTRY----> "+methodname);
+		JSONObject jobj = null ;
+		String state = "" ;
+		mStateList = new ArrayList<String>() ;
+		//Please select option
+		mStateList.add("--Select--");
+		//Traversing through all the items in the json array
+		for(int i=0;i<j.length();i++){
+			try {
+				//Getting json object
+				state = j.get(i).toString();
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			mStateList.add(state);
+		}//end for loop
+		System.out.println(TAG + " EXIT----> "+methodname);
+	}//end of getStateList
 	/**********************************************************
 	 * This method gets the distributors state wise from server
 	 * and then populates the spinner element of distributor
@@ -468,6 +494,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 					bus_reg_no = "" ;
 					et_busname.setText("");
 					bus_name = "" ;
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
 				}else if ("NODATA".equals(mStrDistributorDetails)) {
 					mTitle = "Message";
 					mMsg = "Currently no distributors available\nContact your admin";
@@ -483,7 +515,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 					bus_reg_no = "" ;
 					et_busname.setText("");
 					bus_name = "" ;
-
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
 				}else{
 					//populate distributor spinner
 					//convert response to jsonobject
@@ -516,6 +553,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 							bus_reg_no = "" ;
 							et_busname.setText("");
 							bus_name = "" ;
+							sit_cap = "" ;
+							et_sit_capacity.setText("");
+							bus_st = "" ;
+							et_bus_st.setText("HH:MM");
+							bus_et = "" ;
+							et_bus_et.setText("HH:MM");
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -542,25 +585,33 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		System.out.println(TAG + " ENTRY----> "+methodname);
 		//"data":[{"distributor_code":"D0000000042","name":"SAUDAGAR PATRA","mobile_no":"9853123052"}]
 		DistributorModel model = null ;
-		mDistributorModels = new ArrayList<DistributorModel>();
 		JSONObject jobj = null ;
-
+		mDistributorModels = new ArrayList<DistributorModel>() ;
+		//Please select option
+		model = new DistributorModel("","","--Select--");
+		mDistributorModels.add(model);
 		//Traversing through all the items in the json array
 		for(int i=0;i<j.length();i++){
-
+			model = new DistributorModel("","","");
 			try {
 				//Getting json object
 				jobj = j.getJSONObject(i);
-				model = new DistributorModel(
+				model.setDistributor_code(null!=jobj.get(TAG_DISTRIBUTOR_ID)?jobj.get(TAG_DISTRIBUTOR_ID).toString():"");
+				model.setMobile_no(null != jobj.get(TAG_DISTRIBUTOR_CN) ? jobj.get(TAG_DISTRIBUTOR_CN).toString() : "");
+				model.setName(null!=jobj.get(TAG_DISTRIBUTOR_NM)?jobj.get(TAG_DISTRIBUTOR_NM).toString():"");
+				/*model = new DistributorModel(
 						null!=jobj.get(TAG_DISTRIBUTOR_ID)?jobj.get(TAG_DISTRIBUTOR_ID).toString():"",
 						null!=jobj.get(TAG_DISTRIBUTOR_CN)?jobj.get(TAG_DISTRIBUTOR_CN).toString():"",
 						null!=jobj.get(TAG_DISTRIBUTOR_NM)?jobj.get(TAG_DISTRIBUTOR_NM).toString():""
 
-				);
-				mDistributorModels.add(model);
+				);*/
+
 			} catch (JSONException e) {
 				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
 			}
+			mDistributorModels.add(model);
 		}//end for loop
 		System.out.println(TAG + " EXIT----> "+methodname);
 	}//end of getDistributors
@@ -613,6 +664,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 					bus_reg_no = "" ;
 					et_busname.setText("");
 					bus_name = "" ;
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
 				}else if ("NODATA".equals(mStrVehicleDetails)) {
 					mTitle = "Message";
 					mMsg = "Currently no vehicles mapped\nContact your admin";
@@ -622,6 +679,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 					bus_reg_no = "" ;
 					et_busname.setText("");
 					bus_name = "" ;
+					sit_cap = "" ;
+					et_sit_capacity.setText("");
+					bus_st = "" ;
+					et_bus_st.setText("HH:MM");
+					bus_et = "" ;
+					et_bus_et.setText("HH:MM");
 				}else{
 					//populate distributor spinner
 					//convert response to jsonobject
@@ -647,6 +710,12 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 							bus_reg_no = "" ;
 							et_busname.setText("");
 							bus_name = "" ;
+							sit_cap = "" ;
+							et_sit_capacity.setText("");
+							bus_st = "" ;
+							et_bus_st.setText("HH:MM");
+							bus_et = "" ;
+							et_bus_et.setText("HH:MM");
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -672,26 +741,37 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 		System.out.println(TAG + " ENTRY----> "+methodname);
 		//"data":[{"name":"SAIKRUPA","number":"OD02Q2155"}]
 		VehicleModel model = null ;
-		mVehicleModels = new ArrayList<VehicleModel>();
 		JSONObject jobj = null ;
+		mVehicleModels = new ArrayList<VehicleModel>() ;
 
+		//please select option
+		model = new VehicleModel("","--Select--","","",0);
+		mVehicleModels.add(model);
 		//Traversing through all the items in the json array
 		for(int i=0;i<j.length();i++){
-
+			model = new VehicleModel("","","00:00","00:00",0);
 			try {
 				//Getting json object
 				jobj = j.getJSONObject(i);
-				model = new VehicleModel(
-						null!=jobj.get(TAG_VEHICLE_NM)?jobj.get(TAG_VEHICLE_NM).toString():"",
-						null!=jobj.get(TAG_VEHICLE_RN)?jobj.get(TAG_VEHICLE_RN).toString():""
+				model.setVehicle_no(null!=jobj.get(TAG_VEHICLE_RN)?jobj.get(TAG_VEHICLE_RN).toString():"");
+				model.setVehicle_name(null!=jobj.get(TAG_VEHICLE_NM)?jobj.get(TAG_VEHICLE_NM).toString():"");
+				model.setStart_time(null!=jobj.get(TAG_ST)?jobj.get(TAG_ST).toString():"");
+				model.setEnd_time(null!=jobj.get(TAG_ET)?jobj.get(TAG_ET).toString():"");
+				model.setSitting_capacity(null!=jobj.get(TAG_SEAT_CAP)?Integer.parseInt(jobj.get(TAG_SEAT_CAP).toString()):0);
 
-				);
-				mVehicleModels.add(model);
+				//call the other constructor
+
+
 			} catch (JSONException e) {
 				e.printStackTrace();
+			}catch(NumberFormatException nfe){
+				nfe.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
 			}
+			mVehicleModels.add(model);
 		}//end for loop
-		System.out.println(TAG + " EXIT----> "+methodname);
+		System.out.println(TAG + " EXIT----> " + methodname);
 	}//end of getVehicles
 
 
@@ -700,9 +780,8 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	 * This method used to send registration details to server
 	 * and then retrieves the response/ack from server
 	 * and then update the status in local database
-	 * @param jsonObjRegDetails
 	 **********************************************************/
-	private void getRegistrationAck(final JSONObject jsonObjRegDetails) {
+	private void getRegistrationAck() {
 		System.out.println(TAG + " ENTRY----> getRegistrationAck");
 
 
@@ -784,7 +863,7 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									//again registration request with same data
-									getRegistrationAck(jsonObjRegDetails);
+									getRegistrationAck();
 									dialog.dismiss();
 
 								}
@@ -809,17 +888,37 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	 */
 	private boolean validateFields() {
 		System.out.println(TAG + " ENTRY----> validateFields");
-		boolean flag = false ;
-		System.out.println(TAG+"bsitcapacity :"+bsitcapacity);
-		System.out.println(TAG+"bst :"+bst);
-		System.out.println(TAG+"bet :"+bet);
-		System.out.println(TAG + "bagentid :" + bagentid);
-		System.out.println(TAG + "bagentnm :" + bagentnm);
-		System.out.println(TAG + "bagentcn :" + bagentcn);
-		if(bsitcapacity && bst && bet && bagentid && bagentnm && bagentcn)
-			flag = true ;
+		//EditText et_owner_cn,et_busname, et_sit_capacity, et_bus_st, et_bus_et,et_agent_id ;
+		//String imei_no, state,own_code,own_nm,own_cn,bus_name,bus_reg_no, sit_cap, bus_st, bus_et,agent_id ;
+		if(null == state || "".equals(state) || "--Select--".equals(state)){
+			showErrorAlert("Error","Choose State");
+			return false ;
+		}
+
+		if(null == own_nm || "".equals(own_nm) || "--Select--".equals(own_nm)){
+			showErrorAlert("Error","Choose Owner Name");
+			return false ;
+		}
+		if(null == bus_reg_no || "".equals(bus_reg_no) || "--Select--".equals(bus_reg_no)){
+			showErrorAlert("Error","Choose GraminPRACHAR Point");
+			return false ;
+		}
+
+		//validating agent id
+		agent_id = et_agent_id.getText().toString().trim() ;
+		if(null == agent_id || "".equals(agent_id)){
+			showErrorAlert("Error","Please Enter Your Agent Id");
+			return false ;
+		}
+		if (!agent_id.matches("[A-Za-z]{2}[a-zA-Z0-9\\s]*")) {
+			//et_agent_id.setError("Invalid Id...");
+			showErrorAlert("Error","Invalid Agent ID");
+			et_agent_id.setText("");
+			return false ;
+		}
+
 		System.out.println(TAG + " EXIT----> validateFields");
-		return flag ;
+		return true ;
 	}//end of validateFields
 
 	/**
@@ -871,9 +970,15 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 			case R.id.sp_bus_regno:
 				VehicleModel v = (VehicleModel)parent.getSelectedItem();
 
-				bus_reg_no = v.getNumber();
-				bus_name =  v.getName() ;
-				et_busname.setText(v.getName());
+				bus_reg_no = v.getVehicle_no();
+				bus_name =  v.getVehicle_name() ;
+				sit_cap = v.getSitting_capacity()+"" ;
+				bus_st = v.getStart_time() ;
+				bus_et = v.getEnd_time() ;
+				et_busname.setText(bus_name);
+				et_sit_capacity.setText(sit_cap);
+				et_bus_st.setText(bus_st);
+				et_bus_et.setText(bus_et);
 				System.out.println(TAG + "bus_reg_no::" + bus_reg_no);
 				System.out.println(TAG + "bus_name::" + bus_name);
 
@@ -891,20 +996,5 @@ public class RegistrationActivity extends Activity implements OnClickListener,Ad
 	public void onNothingSelected(AdapterView<?> arg0) {
 
 	}
-	/*public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.url_setting_menu, menu);
 
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item){
-		switch (item.getItemId()){
-			case R.id.action_settings:
-				startActivity(new Intent(getApplicationContext(),ChangeUrlActivity.class));
-				return false;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}*/
 }

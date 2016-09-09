@@ -339,6 +339,18 @@
                                 android:textColor="@color/colorBlue"
                                 android:textStyle="bold"
                                 android:minWidth="85dp"/>
+                            <TextView
+                                android:id="@+id/tv_th41"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:padding="5dp"
+                                android:text="@string/report_head_31"
+                                android:textSize="@dimen/text_size_normal"
+                                android:gravity="center"
+                                android:textColor="@color/colorBlue"
+                                android:textStyle="bold"
+                                android:minWidth="85dp"/>
 
                             <TextView
                                 android:id="@+id/tv_th5"
@@ -379,7 +391,7 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="90dp"></TextView>
@@ -390,7 +402,7 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"></TextView>
@@ -401,18 +413,27 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"/>
-
+                            <TextView
+                                android:id="@+id/tv_td41"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:background="@drawable/cell_shape"
+                                android:padding="5dp"
+                                android:text="0"
+                                android:textSize="@dimen/text_size_normal"
+                                android:gravity="center"
+                                android:minWidth="85dp"/>
                             <TextView
                                 android:id="@+id/tv_td5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="0"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"/>
@@ -443,7 +464,7 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="90dp"></TextView>
@@ -454,7 +475,7 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"></TextView>
@@ -465,18 +486,27 @@
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="00:00:00"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"/>
-
+                            <TextView
+                                android:id="@+id/tv_td91"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:background="@drawable/cell_shape"
+                                android:padding="5dp"
+                                android:text="0"
+                                android:textSize="@dimen/text_size_normal"
+                                android:gravity="center"
+                                android:minWidth="85dp"/>
                             <TextView
                                 android:id="@+id/tv_td10"
                                 android:layout_width="wrap_content"
                                 android:layout_height="fill_parent"
                                 android:background="@drawable/cell_shape"
                                 android:padding="5dp"
-                                android:text="TextView"
+                                android:text="0"
                                 android:textSize="@dimen/text_size_normal"
                                 android:gravity="center"
                                 android:minWidth="85dp"/>

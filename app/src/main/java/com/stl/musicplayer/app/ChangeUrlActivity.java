@@ -93,6 +93,12 @@ public class ChangeUrlActivity extends Activity implements OnClickListener{
     				
     				alertDialog.setTitle("Alert");
         		    alertDialog.setMessage("Current URL is : " + Utils.SERVER_URL);
+					/****************************************************************************
+					 Added by Ranavir on Dt. 30Aug2016 for tracking ipchage in Registration page
+					 ****************************************************************************/
+					//Make Registration page IPPing flag to false for Page refreshing if Registration not done
+					RegistrationActivity.bIPPingStatus = false ;
+					////////////////////////////////////////////////////////////////////////////////////////
     			}else{
     				alertDialog.setTitle("Error");
         		    alertDialog.setMessage("Current URL is : " + Utils.SERVER_URL);

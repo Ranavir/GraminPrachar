@@ -4,11 +4,12 @@
     <string name="hello">Hello, GraminPRACHAR</string>
     <string name="app_name">GraminPRACHAR</string>
     <string name="company_web">&#169; 2015 | STLINDIA</string>
-    <string name="select_prompt">---Select---</string>
+    <string name="select_prompt">Please Choose</string>
     <string name="report_head_0">Details</string>
     <string name="report_head_1">Total\nDuration</string>
     <string name="report_head_2">Start\nTime</string>
     <string name="report_head_3">End\nTime</string>
+    <string name="report_head_31">Song/Add\nCount</string>
     <string name="report_head_4">Pause\nCount</string>
     <string name="report_body_1">Songs</string>
     <string name="report_body_2">Adds</string>
@@ -17,5 +18,18 @@
         <item>AP</item>
         <item>WEST BENGAL</item>
     </string-array>
+    <style name="ButtonText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/btn_height_normal</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
 
 </resources>

@@ -67,8 +67,6 @@ public class DatabaseUtil {
 								"bus_st text," +
 								"bus_et text," +
 								"agent_id text," +
-								"agent_nm text," +
-								"agent_cn text,"+
 								"status text,"+
 								"created_by text,"+
 								"created_on text,"+
@@ -291,11 +289,9 @@ public class DatabaseUtil {
 			value.put("bus_et",  		input.getString("bus_et").trim());
 
 			value.put("agent_id",  		input.getString("agent_id").trim());
-			value.put("agent_nm",  		input.getString("agent_nm").trim());
-			value.put("agent_cn",  		input.getString("agent_cn").trim());
 
 			value.put("status",  		input.getString("status").trim());//change to 0 after server side registration servlet implementation
-			value.put("created_by",  	input.getString("agent_nm").trim());
+			value.put("created_by",  	input.getString("agent_id").trim());
 			value.put("created_on",  	Utils.getDate("yyyy-MM-dd HH:mm:ss"));
 
 			rowId=db.insert("regd_details", null, value);
@@ -341,8 +337,6 @@ public class DatabaseUtil {
 				obj.put("own_nm", c.getString(c.getColumnIndex("own_nm")));
 				obj.put("own_cn", c.getString(c.getColumnIndex("own_cn")));
 				obj.put("agent_id", c.getString(c.getColumnIndex("agent_id")));
-				obj.put("agent_nm", c.getString(c.getColumnIndex("agent_nm")));
-				obj.put("agent_cn", c.getString(c.getColumnIndex("agent_cn")));
 				obj.put("status", c.getString(c.getColumnIndex("status")));
 				obj.put("created_by", c.getString(c.getColumnIndex("created_by")));
 				obj.put("created_on", c.getString(c.getColumnIndex("created_on")));
@@ -449,7 +443,8 @@ public class DatabaseUtil {
 	public JSONObject getDailyReports(String date) {
 		Log.d(TAG, "Entry---> getDailyReports");
 		JSONObject obj = new JSONObject();
-		int scount = 0;
+		int count = 0;
+		int scount = 0 ;
 		int acount = 0 ;
 
 		Long stt = 0L ;
@@ -458,21 +453,24 @@ public class DatabaseUtil {
 		String ast = "00:00:00" ;
 		String set = "00:00:00" ;
 		String aet = "00:00:00" ;
+
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a");
+
 		int spc = 0,apc = 0 ;
 		try {
 			db = helper.getReadableDatabase();
+			date = new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("dd-MM-yyyy").parse(date)) ;
 
 			String qry1 = String.format("select song_name,start_time,end_time from play_song_details where play_date = Date('%s')",
-					new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("dd-MM-yyyy").parse(date)));
+					date);
 			System.out.println(TAG + "qry1::" + qry1);
 			Cursor c = db.rawQuery(qry1, null);
 			if (c.moveToFirst()) {
 
 				do{
-					scount++ ;
-					if(scount == 1){//do only once
+					count++ ;
+					if(count == 1){//do only once
 						sst = timeFormat.format(format.parse(c.getString(c.getColumnIndex("start_time"))));
 
 					}
@@ -492,9 +490,15 @@ public class DatabaseUtil {
 				}while(c.moveToNext());
 
 			}//end if stmt of database reading
+			//Get formatted time
+			String strStt = String.format("%02d:%02d:%02d",
+					TimeUnit.MILLISECONDS.toHours(stt),
+					TimeUnit.MILLISECONDS.toMinutes(stt) -
+							TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(stt)), // The change is in this line
+					TimeUnit.MILLISECONDS.toSeconds(stt) -
+							TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(stt)));
 			//Query for pause details
-			String qry2 = String.format("select count(*) from play_song_pause_detail where play_date = Date('%s')",
-					new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("dd-MM-yyyy").parse(date)));
+			String qry2 = String.format("select count(*) from play_song_pause_detail where play_date = Date('%s')",date);
 			System.out.println(TAG + "qry2::" + qry2);
 			Cursor c1 = db.rawQuery(qry2, null);
 			if (c1.moveToFirst()) {
@@ -505,21 +509,28 @@ public class DatabaseUtil {
 				//}while(c1.moveToNext());
 
 			}//end if stmt of database reading
-			String strStt = String.format("%02d:%02d:%02d",
-					TimeUnit.MILLISECONDS.toHours(stt),
-					TimeUnit.MILLISECONDS.toMinutes(stt) -
-							TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(stt)), // The change is in this line
-					TimeUnit.MILLISECONDS.toSeconds(stt) -
-							TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(stt)));
+			//Query for song count
+			String qry3 = String.format("select count(distinct song_name) from play_song_details where play_date = Date('%s')",date);
+			System.out.println(TAG + "qry:3:" + qry3);
+			Cursor c2 = db.rawQuery(qry2, null);
+			if (c2.moveToFirst()) {
+
+				scount = c2.getInt(0);
+				System.out.println(TAG+"scount::"+scount);
+
+			}//end if stmt of database reading
+
 			obj.put("song_total_time",strStt);
 			obj.put("song_start_time",sst);
 			obj.put("song_end_time",set);
 			obj.put("song_pause_count",spc);
+			obj.put("song_count",scount);
 
 			obj.put("add_total_time",att);
 			obj.put("add_start_time",ast);
 			obj.put("add_end_time",aet);
 			obj.put("add_pause_count",apc);
+			obj.put("add_count",acount);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{

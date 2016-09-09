@@ -967,6 +967,61 @@ public class Utils {
 	    return dir.delete();
 	}
 	/**********************************************************
+	 * This method gets the states list from server
+	 *
+	 * @return String
+	 * @date 29082016
+	 **********************************************************/
+	public static String getStates(Context context) {
+		String line = "";
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		if(checkiInternet(context)){
+			try {
+
+				ArrayList<NameValuePair> namevaluepair = new ArrayList<NameValuePair>();
+				namevaluepair.add(new BasicNameValuePair("reqId","106"));//put reqId
+
+				int timeoutConnection = 20000;
+
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpParams httpParameters = httpClient.getParams();
+				//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+
+				HttpConnectionParams.setConnectionTimeout(httpParameters, REGISTRATION_TIMEOUT);
+				HttpConnectionParams.setSoTimeout(httpParameters, WAIT_TIMEOUT);
+				ConnManagerParams.setTimeout(httpParameters, WAIT_TIMEOUT);
+
+
+
+
+				HttpPost httpPost = new HttpPost(SERVER_URL);
+				httpPost.setEntity(new UrlEncodedFormEntity(namevaluepair));
+				HttpResponse response = httpClient.execute(httpPost);
+
+				StatusLine statusLine = response.getStatusLine();
+				if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+					BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					String s = "" ;
+					//line may be{NODATA/FAILED/(DATA)}
+					while ((s = br.readLine()) != null){
+						line += s ;
+					}
+				}else{
+					line = "FAILED" ;
+				}
+
+			} catch (Exception e) {
+				//msg="Unable to connect to the server.";
+				e.printStackTrace();
+				line = "FAILED" ;
+			}
+		}
+		return line;
+	}//end of getStates
+	/**********************************************************
 	 * This method gets the distributors state wise from server
 	 *
 	 * @param strStateName

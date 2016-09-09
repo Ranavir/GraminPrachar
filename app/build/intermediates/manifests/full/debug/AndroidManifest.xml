@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stl.musicplayer"
     android:versionCode="11"
-    android:versionName="11.3" >
+    android:versionName="11.4" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -99,13 +99,15 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-
-        <receiver android:name="com.stl.musicplayer.app.PowerConnectionReceiver2" >
+        <!-- Commented by Ranvir on Date: 07Sept2016 for avoiding auto app open on charger/usb connection -->
+        <!--
+        <receiver android:name=".app.PowerConnectionReceiver2" >
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+        -->
 
         <activity android:name="com.stl.musicplayer.app.DashboardActivity" />
     </application>

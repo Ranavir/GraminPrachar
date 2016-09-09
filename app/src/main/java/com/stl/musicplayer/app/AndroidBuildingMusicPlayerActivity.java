@@ -151,7 +151,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private boolean sp_flag = false ;
 	ArrayList<ReportModel> mReportModels;
 	DatabaseUtil mDatabaseUtil = null;
-	TextView tv_td2,tv_td3,tv_td4,tv_td5,tv_td7,tv_td8,tv_td9,tv_td10;
+	TextView tv_td2,tv_td3,tv_td4,tv_td5,tv_td7,tv_td8,tv_td9,tv_td10,tv_td41,tv_td91;
 	//TextView tv_cal_header ;
 	Intent backendServiceIntent, mediaDownloadIntent, serviceBootCompleteIntent;
 	@SuppressWarnings("deprecation")
@@ -316,6 +316,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		tv_td8 = (TextView)findViewById(R.id.tv_td8);
 		tv_td9 = (TextView)findViewById(R.id.tv_td9);
 		tv_td10 = (TextView)findViewById(R.id.tv_td10);
+		tv_td41 = (TextView)findViewById(R.id.tv_td41);
+		tv_td91 = (TextView)findViewById(R.id.tv_td91);
 
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
@@ -395,11 +397,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			tv_td3.setText(obj.get("song_start_time").toString());
 			tv_td4.setText(obj.get("song_end_time").toString());
 			tv_td5.setText(obj.get("song_pause_count").toString());
+			tv_td41.setText(obj.get("song_count").toString());
 
 			tv_td7.setText(obj.get("add_total_time").toString());
 			tv_td8.setText(obj.get("add_start_time").toString());
 			tv_td9.setText(obj.get("add_end_time").toString());
 			tv_td10.setText(obj.get("add_pause_count").toString());
+			tv_td91.setText(obj.get("add_count").toString());
 		}catch (JSONException e) {
 			e.printStackTrace();
 		}catch (Exception e) {

@@ -13,4 +13,8 @@
     <color name="txtcolor">#8F8F8F</color>
 
     <color name="colorBtnEvent">#4A4A4A</color>
+
+    <color name="colorBg1">#EBEBEB</color>
+    <color name="colorBg2">#06609F</color>
+    <color name="colorTxt1">#4C4C44</color>
 </resources>
